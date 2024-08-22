@@ -48,8 +48,17 @@ void autonomous(void) {
   // ..........................................................................
 
 
-//party bus ritz bitz
-//bruh brain
+//drive backwards about 1 tile
+//clamp on mobile goal
+//move intake to put disc on mobile goal
+//turn left for about 35-40 degrees
+//drive forward about 1.5 tiles
+//run intake
+//turn 45 degrees to the left
+//release mobile goal
+//turn 90 degrees left
+//drive forward for 1 tile
+
 
 }
 
