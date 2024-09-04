@@ -8,9 +8,9 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include "robot-config.h"
 
 using namespace vex;
-
 // A global instance of competition
 competition Competition;
 
@@ -75,6 +75,39 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
+
+    //driver
+    
+    if (Controller.Axis3.value < 0 or Controller.Axis3.value > 0){
+
+      leftSide.isSpinning = true;
+      leftSide.velocity = Controller.Axis3.value;
+
+    }
+
+    else if (Controller.Axis3.value == 0){
+
+      leftSide.isSpinning = false;
+
+
+    }
+
+    if (Controller.Axis1.value < 0 or Controller.Axis1.value > 0){
+
+      rightSide.isSpinning = true;
+      rightSide.velocity = Controller.Axis1.value;
+
+    }
+
+    else if (Controller.Axis1.value == 0){
+
+      rightSide.isSpinning = false;
+
+
+    }
+
+
+
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
