@@ -74,38 +74,51 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+
+  //Create variables and configurations
+  leftSide.setStopping(brake);
+  rightSide.setStopping(brake);
+
+  //setting up the screen to be configured in the loop
+  Controller.Screen.clearScreen();
+
+
   while (1) {
+
+    //Robot Info
+
+    float batteryLife = BatteryCapacity; //Get Robot Battery
+
+    float tempLFM = LFM.temperature; //Get motor temperatures
+    float tempLMM = LMM.temperature;
+    float tempLBM = LBM.temperature;
+    float tempRFM = RFM.temperature;
+    float tempRMM = RMM.temperature;
+    float tempRBM = RBM.temperature;
+
+
+    /* Controller Screen Concept
+    
+    Battery Life: XX%                Temperatures:
+                                        90*     94.2*
+                                        89.24*  90.3
+                                        93.2    95.8*
+    
+    */
+
+
+
+    //Controller screen info
+    Controller.Screen.clearScreen();
+    Controller.Screen.print("Battery: ", batteryLife);
+    Controller.Screen.print("")
 
     //driver
     
-    if (Controller.Axis3.value < 0 or Controller.Axis3.value > 0){
-
-      leftSide.isSpinning = true;
-      leftSide.velocity = Controller.Axis3.value;
-
-    }
-
-    else if (Controller.Axis3.value == 0){
-
-      leftSide.isSpinning = false;
-
-
-    }
-
-    if (Controller.Axis1.value < 0 or Controller.Axis1.value > 0){
-
-      rightSide.isSpinning = true;
-      rightSide.velocity = Controller.Axis1.value;
-
-    }
-
-    else if (Controller.Axis1.value == 0){
-
-      rightSide.isSpinning = false;
-
-
-    }
-
+    leftSide.setVelocity(Controller.Axis3.position(), percent);
+    rightSide.setVelocity(Controller.Axis2.position(), percent);
+    leftSide.spin(forward);
+    rightSide.spin(forward);
 
 
     // This is the main execution loop for the user control program.
