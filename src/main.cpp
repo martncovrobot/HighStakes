@@ -76,26 +76,43 @@ void usercontrol(void) {
   // User control code here, inside the loop
 
   //Create variables and configurations
-  leftSide.setStopping(brake);
-  rightSide.setStopping(brake);
+  leftSide.setStopping(coast);
+  rightSide.setStopping(coast);
 
   //setting up the screen to be configured in the loop
-  Controller.Screen.clearScreen();
-
+  
+  
+  //Controller.Screen.print("please work");
+  
+  //Controller.Screen.print(tempLMM);
+  //Controller.Screen.print("second line");
 
   while (1) {
 
     //Robot Info
 
-    float batteryLife = BatteryCapacity; //Get Robot Battery
+    int batteryLife = vexBatteryCapacityGet(); //Get Robot Battery
+    int tempLMM = LMM.temperature();
 
-    float tempLFM = LFM.temperature; //Get motor temperatures
+    Controller.Screen.clearScreen();
+
+    Controller.Screen.setCursor(0, 0); //top left of controller
+    Controller.Screen.print("Battery:");
+    Controller.Screen.setCursor(0,9);
+    Controller.Screen.print(batteryLife);
+    Controller.Screen.setCursor(0, 20);
+    Controller.Screen.print(tempLMM);
+    
+
+
+    /*float tempLFM = LFM.temperature; //Get motor temperatures
     float tempLMM = LMM.temperature;
     float tempLBM = LBM.temperature;
     float tempRFM = RFM.temperature;
     float tempRMM = RMM.temperature;
-    float tempRBM = RBM.temperature;
+    float tempRBM = RBM.temperature;*/
 
+    
 
     /* Controller Screen Concept
     
@@ -109,9 +126,9 @@ void usercontrol(void) {
 
 
     //Controller screen info
-    Controller.Screen.clearScreen();
-    Controller.Screen.print("Battery: ", batteryLife);
-    Controller.Screen.print("")
+    //Controller.Screen.clearScreen();
+    //Controller.Screen.print("Battery: ", batteryLife);
+    //Controller.Screen.print("")
 
     //driver
     
