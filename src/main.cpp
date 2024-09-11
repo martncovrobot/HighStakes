@@ -73,84 +73,105 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  // User control code here, inside the loop
 
-  //Create variables and configurations
+  /* IDEAS SECTION
+  *
+  *  Add a way to measure tank psi and add that on controller
+  *  Add an overdrive feature using buttons (increase voltage temporarily for emergencies like fighting; might have to change the way the robot drives)
+  *  Vibration during phases of match (last 30 seconds to be aware of time, last 15 so not touch corners, last 10 so not block hanging)
+  *  
+  * 
+  */
+
+
+
+
+  //Create variables and configurations (This stuff only runs once after autonomous)
+  //This is where to put speed, motor configurations, etc. that you want to start with (they can be changed during the loop too)
+
   leftSide.setStopping(coast);
   rightSide.setStopping(coast);
 
-  //setting up the screen to be configured in the loop
+  //Set timers for match
+
+  Brain.resetTimer();
   
-  
-  //Controller.Screen.print("please work");
-  
-  //Controller.Screen.print(tempLMM);
-  //Controller.Screen.print("second line");
+
 
   while (1) {
+
+    //Everything inside this loop runs every 20ms during driving phase
 
     //Robot Info
 
     int batteryLife = vexBatteryCapacityGet(); //Get Robot Battery
-    int tempLMM = LMM.temperature();
 
-    Controller.Screen.clearScreen();
+    int tempLFM = LFM.temperature(); //Get Temperature of Motors
+    int tempLMM = LMM.temperature();
+    int tempLBM = LBM.temperature();
+    int tempRFM = RFM.temperature();
+    int tempRMM = RMM.temperature();
+    int tempRBM = RBM.temperature();
+
+    Controller.Screen.clearScreen(); //Reset the screen to update the controller
+                                     //Otherwise it just starts displaying off-screen
 
     Controller.Screen.setCursor(0, 0); //top left of controller
-    Controller.Screen.print("Battery:");
-    Controller.Screen.setCursor(0,9);
-    Controller.Screen.print(batteryLife);
-    Controller.Screen.setCursor(0, 20);
-    Controller.Screen.print(tempLMM);
+    Controller.Screen.print("BTRY"); 
+
+    Controller.Screen.setCursor(0,4); //top of screen, right after "Battery:"
+    Controller.Screen.print(batteryLife); //print the current battery level(%)
+
+    Controller.Screen.setCursor(0, 10); //top right of controller
+    Controller.Screen.print("Temps"); //temperature segment header
+
+    Controller.Screen.setCursor(0, 15); //top of controller but right of "temps"
+    Controller.Screen.print(tempLFM); // Temperature of Left Front Motor
+
+    Controller.Screen.setCursor(0, 18); //top of controller but right of LFM
+    Controller.Screen.print(tempRFM); // Temperature of Right Front Motor
+
+    Controller.Screen.setCursor(1, 15); //right below LFM
+    Controller.Screen.print(tempLMM) // Temperature of Left Middle Motor (The higher up one on the robot)
+
+    Controller.Screen.setCursor(1, 18); //to the right of LMM
+    Controller.Screen.print(tempRMM); // right middle motor (higher up one on robot);
+
+    Controller.Screen.setCursor(2, 15); // right below LMM
+    Controller.Screen.print(LBM); //Left Back motor (lower one in the back)
+
+    Controller.Screen.setCursor(2,18); // to the right of LBM
+    Controller.Screen.print(RBM);
+
+
+
+
     
-
-
-    /*float tempLFM = LFM.temperature; //Get motor temperatures
-    float tempLMM = LMM.temperature;
-    float tempLBM = LBM.temperature;
-    float tempRFM = RFM.temperature;
-    float tempRMM = RMM.temperature;
-    float tempRBM = RBM.temperature;*/
+    
 
     
 
     /* Controller Screen Concept
     
-    Battery Life: XX%                Temperatures:
-                                        90*     94.2*
-                                        89.24*  90.3
-                                        93.2    95.8*
+    BTRY:87                      Temps  45*     50*
+    RSVR:80                             55*     45*
+                                        50*     40*
     
     */
 
-
-
-    //Controller screen info
-    //Controller.Screen.clearScreen();
-    //Controller.Screen.print("Battery: ", batteryLife);
-    //Controller.Screen.print("")
-
     //driver
     
-    leftSide.setVelocity(Controller.Axis3.position(), percent);
-    rightSide.setVelocity(Controller.Axis2.position(), percent);
-    leftSide.spin(forward);
+    leftSide.setVelocity(Controller.Axis3.position(), percent); //sets the speed of the left motors
+    rightSide.setVelocity(Controller.Axis2.position(), percent); //sets the speed of the right motors
+
+    leftSide.spin(forward); //motors always spinning, but if joystick centered then speed = 0 so it doesnt matter
     rightSide.spin(forward);
 
+    wait(20, msec);
 
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+  } //end of the loop
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
-
-    wait(20, msec); // Sleep the task for a short amount of time to
-                    // prevent wasted resources.
-  }
-}
+}//end of the usercontrol(driver phase) segment
 
 //
 // Main will set up the competition functions and callbacks.
