@@ -72,6 +72,99 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+void gameTimer(phase){
+
+  Brain.resetTimer();
+  
+
+  //game phase is 1:45
+  //autonomous is 0:15
+  //both skills are 1:00
+
+  switch(phase){
+
+    //1 = autonomous
+    //2 = driver
+    //3 = skills
+
+
+    case 1:
+
+      while(Brain.Timer(sec))
+
+
+    break;
+
+
+  }
+
+
+
+
+
+}
+
+void setScreen(){
+
+
+
+  while(1){
+
+    int batteryLife = vexBatteryCapacityGet(); //Get Robot Battery
+
+    int tempLFM = LFM.temperature(); //Get Temperature of Motors
+    int tempLMM = LMM.temperature();
+    int tempLBM = LBM.temperature();
+    int tempRFM = RFM.temperature();
+    int tempRMM = RMM.temperature();
+    int tempRBM = RBM.temperature();
+
+
+    //Controller.Screen.clearScreen();
+
+    Controller.Screen.clearLine();
+
+    Controller.Screen.setCursor(0, 0); //top left of controller
+    Controller.Screen.print("BTRY"); 
+
+    Controller.Screen.setCursor(0,6); //top of screen, right after "Battery:"    
+    Controller.Screen.print(batteryLife); //print the current battery level(%)
+
+    Controller.Screen.setCursor(1, 13); //top of controller but right of "temps"
+    Controller.Screen.print(tempLFM); // Temperature of Left Front Motor
+
+    Controller.Screen.setCursor(1, 17); //top of controller but right of LFM
+    Controller.Screen.print(tempRFM); // Temperature of Right Front Motor
+
+    Controller.Screen.clearLine();
+
+    Controller.Screen.setCursor(2, 16); //right below LFM
+    Controller.Screen.print(tempLMM); // Temperature of Left Middle Motor (The higher up one on the robot)
+
+    Controller.Screen.setCursor(2, 20); //to the right of LMM
+    Controller.Screen.print(tempRMM); // right middle motor (higher up one on robot);
+
+    Controller.Screen.clearLine();
+
+    Controller.Screen.setCursor(3, 16); // right below LMM
+    Controller.Screen.print(tempLBM); //Left Back motor (lower one in the back)
+
+    Controller.Screen.setCursor(3,20); // to the right of LBM
+    Controller.Screen.print(tempRBM);
+
+    wait(500,msec); //screen update timer
+
+  } //end of loop
+
+   
+  
+  
+
+
+}//end of function
+
+
+
 void usercontrol(void) {
 
   /* IDEAS SECTION
@@ -83,19 +176,16 @@ void usercontrol(void) {
   * 
   */
 
-
-
-
   //Create variables and configurations (This stuff only runs once after autonomous)
   //This is where to put speed, motor configurations, etc. that you want to start with (they can be changed during the loop too)
 
   leftSide.setStopping(coast);
   rightSide.setStopping(coast);
 
-  //Set timers for match
+  //Designate another thread to running the screen
 
-  Brain.resetTimer();
-  
+  thread(setScreen).detach();
+
 
 
   while (1) {
@@ -104,46 +194,11 @@ void usercontrol(void) {
 
     //Robot Info
 
-    int batteryLife = vexBatteryCapacityGet(); //Get Robot Battery
+    
 
-    int tempLFM = LFM.temperature(); //Get Temperature of Motors
-    int tempLMM = LMM.temperature();
-    int tempLBM = LBM.temperature();
-    int tempRFM = RFM.temperature();
-    int tempRMM = RMM.temperature();
-    int tempRBM = RBM.temperature();
-
-    Controller.Screen.clearScreen(); //Reset the screen to update the controller
+    //Controller.Screen.clearScreen(); //Reset the screen to update the controller
                                      //Otherwise it just starts displaying off-screen
-
-    Controller.Screen.setCursor(0, 0); //top left of controller
-    Controller.Screen.print("BTRY"); 
-
-    Controller.Screen.setCursor(0,4); //top of screen, right after "Battery:"
-    Controller.Screen.print(batteryLife); //print the current battery level(%)
-
-    Controller.Screen.setCursor(0, 10); //top right of controller
-    Controller.Screen.print("Temps"); //temperature segment header
-
-    Controller.Screen.setCursor(0, 15); //top of controller but right of "temps"
-    Controller.Screen.print(tempLFM); // Temperature of Left Front Motor
-
-    Controller.Screen.setCursor(0, 18); //top of controller but right of LFM
-    Controller.Screen.print(tempRFM); // Temperature of Right Front Motor
-
-    Controller.Screen.setCursor(1, 15); //right below LFM
-    Controller.Screen.print(tempLMM) // Temperature of Left Middle Motor (The higher up one on the robot)
-
-    Controller.Screen.setCursor(1, 18); //to the right of LMM
-    Controller.Screen.print(tempRMM); // right middle motor (higher up one on robot);
-
-    Controller.Screen.setCursor(2, 15); // right below LMM
-    Controller.Screen.print(LBM); //Left Back motor (lower one in the back)
-
-    Controller.Screen.setCursor(2,18); // to the right of LBM
-    Controller.Screen.print(RBM);
-
-
+    
 
 
     
@@ -171,7 +226,7 @@ void usercontrol(void) {
 
   } //end of the loop
 
-}//end of the usercontrol(driver phase) segment
+} //end of the usercontrol(driver phase) segment
 
 //
 // Main will set up the competition functions and callbacks.
