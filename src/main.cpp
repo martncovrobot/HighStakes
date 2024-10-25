@@ -259,6 +259,9 @@ void usercontrol(void) {
   intakeMotor.setStopping(coast);
   hookMotor.setStopping(coast);
 
+  intakeMotor.setVelocity(50,percent);
+  hookMotor.setVelocity(50,percent);
+
   //Designate another thread to running the screen
 
   //thread(setScreen).detach(); //Screen Display (Temps and battery)
