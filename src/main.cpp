@@ -26,88 +26,109 @@ competition Competition;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-void pre_auton(void) {
 
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
-}
+void runHaptics(int hapticType){
+    //types of haptics:
+    //1 = one long buzz (happens at 30 seconds left)
+    //2 = three quick buzzes (happens at 15 seconds left) (not allowed to touch corners)
+    //3 = two long buzzes (happens at 10 seconds left) (not allowed to impede hangs)
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              Autonomous Task                              */
-/*                                                                           */
-/*  This task is used to control your robot during the autonomous phase of   */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
+    switch(hapticType){
 
-void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+      case 1:
+        Controller.rumble("-");
+      break;
+
+      case 2:
+        Controller.rumble("...");
+      break;
+
+      case 3:
+        Controller.rumble("- -");
+      break;
 
 
-//drive backwards about 1 tile
-//clamp on mobile goal
-//move intake to put disc on mobile goal
-//turn left for about 35-40 degrees
-//drive forward about 1.5 tiles
-//run intake
-//turn 45 degrees to the left
-//release mobile goal
-//turn 90 degrees left
-//drive forward for 1 tile
+    }
+
 
 
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              User Control Task                            */
-/*                                                                           */
-/*  This task is used to control your robot during the user control phase of */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
-
-void gameTimer(phase){
-
-  Brain.resetTimer();
-  
-
-  //game phase is 1:45
-  //autonomous is 0:15
-  //both skills are 1:00
-
-  switch(phase){
-
-    //1 = autonomous
-    //2 = driver
-    //3 = skills
-
-
-    case 1:
-
-      while(Brain.Timer(sec))
-
-
-    break;
-
-
+void autonTimer(){
+  //timer that updates screen and haptics during autonomous
+  //this thread will self-terminate after the round ends
+  for(int timer = 15; timer > 0; timer--){
+    //loop ends after 15 seconds
+    //int timer is the duration of the loop
+    //during the autonomous phase
+    Controller.Screen.setCursor(2,8); //Center of Screen
+    Controller.Screen.clearLine();
+    Controller.Screen.print(timer);
+    wait(1,sec); //run code 1 times per sec
   }
 
 
+}
 
+void matchTimer(){
 
+  //timer that runs during the match
+  //this thread will self-terminate 
+  for(int timer = 105; timer > 0; timer--){
+    //loop ends after 105 seconds (1 minute and 45 seconds)
+    //int timer is the duration of the loop
+    //during the driver phase
+    if (timer == 30){
+      //30 seconds left
+      runHaptics(1);
+    }
+    if (timer == 15){
+      //15 seconds left. cant touch corners
+      runHaptics(2);
+    }
+    if (timer == 10){
+      //10 seconds left. cant touch hanging
+      runHaptics(3);
+    }
+    Controller.Screen.setCursor(2,8); //Center of Screen
+    Controller.Screen.clearLine();
+    Controller.Screen.print(timer);
+    wait(1,sec); //run code 1 times per sec
+  }
+}
+
+void skillsTimer(){
+
+  for(int timer = 60; timer > 0; timer--){
+    //loop ends after 60 seconds (1 minute)
+    //int timer is the duration of the loop
+    //during the skills phase
+    if (timer == 30){
+      //30 seconds left
+      runHaptics(1);
+
+    }
+    if (timer == 15){
+      //15 seconds left
+      runHaptics(2);
+    }
+    if (timer == 10){
+      //10 seconds left
+      runHaptics(3);
+    }
+    Controller.Screen.setCursor(2,8); //Center of Screen
+    Controller.Screen.clearLine();
+    Controller.Screen.print(timer);
+    wait(1,sec); //run code 1 times per sec
+  }
 
 }
 
+
 void setScreen(){
 
-
-
+  //this thread will not self terminate
+  //needs testing to see if vex systems will terminate thread
   while(1){
 
     int batteryLife = vexBatteryCapacityGet(); //Get Robot Battery
@@ -152,7 +173,7 @@ void setScreen(){
     Controller.Screen.setCursor(3,20); // to the right of LBM
     Controller.Screen.print(tempRBM);
 
-    wait(500,msec); //screen update timer
+    wait(500,msec); //screen update timer (twice per second)
 
   } //end of loop
 
@@ -162,6 +183,59 @@ void setScreen(){
 
 
 }//end of function
+
+
+
+void pre_auton(void) {
+
+  // All activities that occur before the competition starts
+  // Example: clearing encoders, setting servo positions, ...
+}
+
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              Autonomous Task                              */
+/*                                                                           */
+/*  This task is used to control your robot during the autonomous phase of   */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
+
+void autonomous(void) {
+  // ..........................................................................
+  // Insert autonomous user code here.
+  // ..........................................................................
+  //thread(setScreen).detach(); // Screen displays motors and temps
+  //thread(autonTimer).detach(); //On-screen timer and haptics
+
+//drive backwards about 1 tile
+//clamp on mobile goal
+//move intake to put disc on mobile goal
+//turn left for about 35-40 degrees
+//drive forward about 1.5 tiles
+//run intake
+//turn 45 degrees to the left
+//release mobile goal
+//turn 90 degrees left
+//drive forward for 1 tile
+
+
+}
+
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              User Control Task                            */
+/*                                                                           */
+/*  This task is used to control your robot during the user control phase of */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
+
+
+
+
 
 
 
@@ -182,10 +256,13 @@ void usercontrol(void) {
   leftSide.setStopping(coast);
   rightSide.setStopping(coast);
 
+  intakeMotor.setStopping(coast);
+  hookMotor.setStopping(coast);
+
   //Designate another thread to running the screen
 
-  thread(setScreen).detach();
-
+  //thread(setScreen).detach(); //Screen Display (Temps and battery)
+  //thread(matchTimer).detach(); //On-screen timer and haptics
 
 
   while (1) {
@@ -193,18 +270,6 @@ void usercontrol(void) {
     //Everything inside this loop runs every 20ms during driving phase
 
     //Robot Info
-
-    
-
-    //Controller.Screen.clearScreen(); //Reset the screen to update the controller
-                                     //Otherwise it just starts displaying off-screen
-    
-
-
-    
-    
-
-    
 
     /* Controller Screen Concept
     
@@ -214,13 +279,50 @@ void usercontrol(void) {
     
     */
 
-    //driver
+    //DriveTrain Motors
     
     leftSide.setVelocity(Controller.Axis3.position(), percent); //sets the speed of the left motors
     rightSide.setVelocity(Controller.Axis2.position(), percent); //sets the speed of the right motors
 
     leftSide.spin(forward); //motors always spinning, but if joystick centered then speed = 0 so it doesnt matter
     rightSide.spin(forward);
+
+
+    //Intake Motor
+    
+    if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
+      //if the right trigger is being pressed AND the right bumper is not then it intakes
+      intakeMotor.spin(forward);
+    }
+
+    else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
+      //if the right bumper is being pressed AND the right trigger is not then it outtakes
+      intakeMotor.spin(reverse);
+    }
+
+    else{
+      //if no buttons are being pressed OR both buttons are being pressed then it stops
+      intakeMotor.stop();
+    }
+    
+
+    //Hook Motor
+
+
+    if(Controller.ButtonL2.pressing()==true && Controller.ButtonL1.pressing()==false){
+      //if the right trigger is being pressed AND the right bumper is not then the hook goes up
+      hookMotor.spin(forward);
+    }
+
+    else if(Controller.ButtonL1.pressing()==true && Controller.ButtonL2.pressing()==false){
+      //if the left bumper is being pressed AND the left trigger is not then the hook goes down
+      hookMotor.spin(reverse);
+    }
+
+    else{
+      //if no buttons are being pressed OR both buttons are being pressed then it stops
+      hookMotor.stop();
+    }
 
     wait(20, msec);
 

@@ -9,5 +9,9 @@ extern motor LBM;
 extern motor RFM;
 extern motor RMM;
 extern motor RBM;
+
+extern motor intakeMotor;
+extern motor hookMotor;
+
 extern motor_group leftSide;
 extern motor_group rightSide;
