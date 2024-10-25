@@ -13,5 +13,7 @@ extern motor RBM;
 extern motor intakeMotor;
 extern motor hookMotor;
 
+extern pneumatics mogoPistons;
+
 extern motor_group leftSide;
 extern motor_group rightSide;
