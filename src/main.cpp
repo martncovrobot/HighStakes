@@ -265,6 +265,7 @@ void usercontrol(void) {
 
   //set what each button does based on numbers
 
+  /*
   int r1 = 1; // intake forw
   int r2 = 2; // intake revers
   int l1 = 3; // hook forwa
@@ -277,6 +278,8 @@ void usercontrol(void) {
   int dpadUp = 6; // mogo in
   int dpadLeft;
   int dpadRight;
+
+  */
 
   //Set each control mode:
 
