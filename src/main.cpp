@@ -250,6 +250,48 @@ void usercontrol(void) {
   * 
   */
 
+
+  //Controller Scheme
+
+  /*
+  * 1 = intake forward
+  * 2 = intake reverse
+  * 3 = hook forward
+  * 4 = hook reverse
+  * 5 = mogo extend
+  * 6 = mogo contract
+  */
+  //drivetrain is locked to analog sticks (tank controls) unless you want something else
+
+  //set what each button does based on numbers
+
+  int r1 = 1; // intake forw
+  int r2 = 2; // intake revers
+  int l1 = 3; // hook forwa
+  int l2 = 4; // hook revers
+  int buttonA;
+  int buttonB;
+  int buttonX;
+  int buttonY;
+  int dpadDown = 5; // mogo out
+  int dpadUp = 6; // mogo in
+  int dpadLeft;
+  int dpadRight;
+
+  //Set each control mode:
+
+  //Control Types (toggle/hold/set)
+  //1 = toggle (press same button to activate and deactivate)
+  //2 = hold (hold button to activate and release to deactivate)
+  //3 = set (press button to activate, must press something else to deactivate)
+
+  /*int intakeForwardMode;
+  int intakeReverseMode;
+  int hookForwardMode;
+  int hookReverseMode;
+  int mogoExtMode;
+  int mogoContMode;*/
+
   //Create variables and configurations (This stuff only runs once after autonomous)
   //This is where to put speed, motor configurations, etc. that you want to start with (they can be changed during the loop too)
 
@@ -259,8 +301,8 @@ void usercontrol(void) {
   intakeMotor.setStopping(coast);
   hookMotor.setStopping(coast);
 
-  intakeMotor.setVelocity(50,percent);
-  hookMotor.setVelocity(50,percent);
+  intakeMotor.setVelocity(100,percent);
+  hookMotor.setVelocity(100,percent);
 
   //Designate another thread to running the screen
 
@@ -292,6 +334,145 @@ void usercontrol(void) {
 
 
     //Intake Motor
+
+    /*
+    if(Controller.ButtonR1.pressing()==true){
+
+      switch(r1){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+
+    }
+    if(Controller.ButtonR2.pressing()==true){
+      switch(r2){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonL1.pressing()==true){
+      switch(l1){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonL2.pressing()==true){
+      switch(l2){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonA.pressing()==true){
+      switch(buttonA){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonB.pressing()==true){
+      switch(buttonB){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonX.pressing()==true){
+      switch(buttonX){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonY.pressing()==true){
+      switch(buttonY){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonUp.pressing()==true){
+      switch(dpadUp){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonLeft.pressing()==true){
+      switch(dpadLeft){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonRight.pressing()==true){
+      switch(dpadRight){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    if(Controller.ButtonDown.pressing()==true){
+      switch(dpadDown){
+        case 1: intakeMotor.spin(forward) break;
+        case 2: intakeMotor.spin(reverse) break;
+        case 3: hookMotor.spin(forward) break;
+        case 4: hookMotor.spin(reverse) break;
+        case 5: mogoPistons.set(true) break;
+        case 6: mogoPistons.set(false) break;
+        default: break;
+      }
+    }
+    
+    */
+
     
     if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
       //if the right trigger is being pressed AND the right bumper is not then it intakes
@@ -310,6 +491,18 @@ void usercontrol(void) {
     
 
     //Mobile-Goal Pneumatics
+
+    if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
+      //if the up dpad is being pressed AND the down dpad is not then it extends
+      mogoPistons.set(true);
+    }
+    else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
+      //if the down dpad is being pressed AND the up dpad is not then it contracts
+      mogoPistons.set(false);
+    }
+    else{
+      //if no buttons are being pressed OR both buttons are being pressed then it does nothing
+    }
 
     
 
