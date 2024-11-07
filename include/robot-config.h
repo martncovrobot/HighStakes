@@ -15,5 +15,7 @@ extern motor hookMotor;
 
 extern pneumatics mogoPistons;
 
+extern inertial inertialSensor;
+
 extern motor_group leftSide;
 extern motor_group rightSide;

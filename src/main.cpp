@@ -27,6 +27,11 @@ competition Competition;
 /*---------------------------------------------------------------------------*/
 
 
+//this code is updated as of 3:47 pm. 11/7/2024
+
+
+
+
 void runHaptics(int hapticType){
     //types of haptics:
     //1 = one long buzz (happens at 30 seconds left)
@@ -192,6 +197,7 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
+
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              Autonomous Task                              */
@@ -202,12 +208,148 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+
+void turn(std::string direction, double degreesTurn, double timeTurn){
+
+  double robotDiameter = 6; //center of robot to wheel in inches
+  int outputGear = 60; //drives wheel
+  int inputGear = 36; //driven by motor
+  double linearDistance = (degreesTurn*3.1415*(robotDiameter/2))/180;
+  double rotations = linearDistance/(3.25*3.1415);
+  double motorRotations = rotations*(outputGear/inputGear);
+  double speedRPM = (motorRotations/timeTurn)*60;
+
+  leftSide.setStopping(brake);
+  rightSide.setStopping(brake);
+
+  if(direction=="left"){
+    inertialSensor.resetRotation(); //reset rotation
+
+    leftSide.setVelocity(speedRPM, rpm);
+    rightSide.setVelocity(speedRPM, rpm);
+
+    while(inertialSensor.rotation() < degreesTurn){
+      leftSide.spin(reverse);
+      rightSide.spin(forward);
+    }
+    leftSide.stop();
+    rightSide.stop();
+  }
+
+  else if(direction=="right"){
+
+    inertialSensor.resetRotation(); //reset rotation
+   
+    leftSide.setVelocity(speedRPM, rpm);
+    rightSide.setVelocity(speedRPM, rpm);
+
+    //int speed = (botRadius*degrees)/time
+    while(inertialSensor.rotation() < degreesTurn){
+      leftSide.spin(forward);
+      rightSide.spin(reverse);
+    }
+    leftSide.stop();
+    rightSide.stop();
+
+
+  }
+
+  else{
+
+    //direction is incorrect
+
+  }
+
+
+}
+
+
+
+void drive(std::string direction, double distanceDrive, double timeDrive){
+
+  //function allows coder to input desired time for drive, code will automatically find speed to match it
+  int outputGear = 60; //drives wheel
+  int inputGear = 36; //driven by motor
+  double rotations = distanceDrive/(3.25*3.1415);
+  double motorRotations = rotations*(outputGear/inputGear);
+  double speedRPM = (motorRotations/timeDrive)*60;
+
+  if(direction == "forward"){
+
+    leftSide.setStopping(brake);
+    rightSide.setStopping(brake);
+
+    leftSide.setVelocity(speedRPM, rpm);
+    rightSide.setVelocity(speedRPM, rpm);
+
+    leftSide.spinFor(forward, motorRotations*360, degrees, speedRPM, rpm, false);
+    rightSide.spinFor(forward, motorRotations*360, degrees, speedRPM, rpm, true);
+
+  }
+
+  if(direction=="reverse"){
+    
+    leftSide.setStopping(brake);
+    rightSide.setStopping(brake);
+
+    leftSide.setVelocity(speedRPM, rpm);
+    rightSide.setVelocity(speedRPM, rpm);
+
+    leftSide.spinFor(reverse, motorRotations*360, degrees, speedRPM, rpm, false);
+    rightSide.spinFor(reverse, motorRotations*360, degrees, speedRPM, rpm, true);
+    
+  }
+
+}
+
+
+
+
+
 void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
   //thread(setScreen).detach(); // Screen displays motors and temps
   //thread(autonTimer).detach(); //On-screen timer and haptics
+
+
+  //INSTRUCTIONS:
+  //the function drive() has parameters (direction, inches, and seconds)
+      //enter direction as either goForward or goBackward
+      //inches can be entered as a decimal
+      //seconds can be entered as a decimal. this is the amount of time the drive will take
+            //start with big number and work your way to a faster time.
+            //faster drives mean less accuracy
+            //do not enter 0, it will not like that
+  //the function turn() has parameters (direction, degrees, and seconds)
+      //the direction can either be left or right
+          //enter as turnLeft or turnRight
+      //degrees can be a decimal
+      //seconds can be entered as a decimal
+          //faster time means less accuracy
+          //do not enter 0 or else it will go crazy
+
+
+  //here is an example of both functions
+  //       drive(goForward, 100, 8);        the robot will drive forward for 100 inches, in 8 seconds
+  //       turn(turnRight, 180, 4);         the robot will turn right for 180 degrees, in 4 seconds
+
+  //here is how to make the motors spin
+  //      (name of motor).spin(forward);        makes motor spin forever
+  //      (name of motor).spinFor(360, degrees); makes motor spin one time(any double or int can be entered)
+  //      (name of motor).spinFor(20, seconds); makes motor spin for 20 seconds
+  //      (name of motor).stop();               stops motor
+  //      (name of motor).setStopping(coast/hold/brake);  changes the stopping mode (coast has no friction, brake has medium, hold is strongest)
+
+  //here is how to use pneumatics
+  //      mogoPistons.set(true);                sets the solenoid to true. this will extend the pistons
+  //      mogoPistons.set(false);               sets the solenoid to false. this will pull the pistons in
+
+  std::string goForward = "forward";
+  std::string goBackward = "reverse";
+  std::string turnLeft = "left";
+  std::string turnRight = "right";
 
 //drive backwards about 1 tile
 //clamp on mobile goal
@@ -232,11 +374,6 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
-
-
-
-
-
 
 
 void usercontrol(void) {
@@ -495,12 +632,12 @@ void usercontrol(void) {
 
     //Mobile-Goal Pneumatics
 
-    if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
-      //if the up dpad is being pressed AND the down dpad is not then it extends
+    if(Controller.ButtonRight.pressing()==true && Controller.ButtonDown.pressing()==false){
+      //if the right dpad is being pressed AND the down dpad is not then it extends
       mogoPistons.set(true);
     }
-    else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
-      //if the down dpad is being pressed AND the up dpad is not then it contracts
+    else if(Controller.ButtonDown.pressing()==true && Controller.ButtonRight.pressing()==false){
+      //if the down dpad is being pressed AND the right dpad is not then it contracts
       mogoPistons.set(false);
     }
     else{
