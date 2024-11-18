@@ -15,6 +15,7 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
+int autonMode;
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -27,7 +28,7 @@ competition Competition;
 /*---------------------------------------------------------------------------*/
 
 
-//this code is updated as of 3:47 pm. 11/7/2024
+//this code is updated as of 9:22 am. 11/18/2024
 
 
 
@@ -51,12 +52,7 @@ void runHaptics(int hapticType){
       case 3:
         Controller.rumble("- -");
       break;
-
-
     }
-
-
-
 }
 
 void autonTimer(){
@@ -79,6 +75,44 @@ void matchTimer(){
 
   //timer that runs during the match
   //this thread will self-terminate 
+
+  Brain.Timer.clear();//set timer to zero
+
+  bool debounce1 = false; 
+  bool debounce2 = false; 
+  bool debounce3 = false; //create the debounces. only allows rumbles to run once
+
+  
+  while(Competition.isDriverControl()==true){
+    //loop will close after driver control (allows brain to clean up)
+    
+    if(Brain.Timer.time(msec)>75000 and debounce1==false){ //when it is between 75 sec and 76 sec
+      debounce1=true;
+      runHaptics(1);
+    }//75 seconds into match
+
+    if(Brain.Timer.time(msec)>=90000 and debounce2==false){
+      debounce2=true;
+      runHaptics(2);
+    }//90 seconds in//15 seconds left
+
+    if(Brain.Timer.time(msec)>=95000 and debounce3==false){
+      debounce3=true;
+      runHaptics(3);
+    }//95 seconds in//10 seconds left
+
+    Controller.Screen.setCursor(2,8); //Center of Screen
+    Controller.Screen.clearLine();
+    Controller.Screen.print(Brain.Timer.time());
+    wait(250,msec);
+  }
+
+  //OLD CODE 
+  //    |
+  //    V
+
+  /*
+
   for(int timer = 105; timer > 0; timer--){
     //loop ends after 105 seconds (1 minute and 45 seconds)
     //int timer is the duration of the loop
@@ -100,6 +134,10 @@ void matchTimer(){
     Controller.Screen.print(timer);
     wait(1,sec); //run code 1 times per sec
   }
+
+  */
+
+
 }
 
 void skillsTimer(){
@@ -189,12 +227,41 @@ void setScreen(){
 
 }//end of function
 
+void calibrateInertial(){
+  inertialSensor.calibrate();
+  while(inertialSensor.isCalibrating()){
+    wait(25,msec);//wait for inertial sensor to calibrate before continuing
+  }
+}
 
 
 void pre_auton(void) {
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  calibrateInertial();
+
+  while(Competition.isAutonomous()==false){
+    //autonomous switcher
+    //this loop ends when autonomous starts
+    if(Controller.ButtonX.pressing()==true) autonMode = 1; //red side
+    else if(Controller.ButtonA.pressing()==true) autonMode = 2; // blue side
+    else if(Controller.ButtonUp.pressing()==true) autonMode = 3; // wall goal left
+    else if(Controller.ButtonLeft.pressing()==true) autonMode = 4; //wall goal right
+    Controller.Screen.clearLine();
+    Controller.Screen.setCursor(1,1);
+    switch(autonMode){
+      case 1: Controller.Screen.print("Left Side"); break;
+      case 2: Controller.Screen.print("Right Side"); break;
+      case 3: Controller.Screen.print("Wall Goal Left"); break;
+      case 4: Controller.Screen.print("Wall Goal Right"); break;
+      default: Controller.Screen.print("Select Autonomous"); break;
+    }
+    
+    wait(0.5,seconds); //interval time
+
+  }
+
 }
 
 
@@ -211,7 +278,7 @@ void pre_auton(void) {
 
 void turn(std::string direction, double degreesTurn, double timeTurn){
 
-  double robotDiameter = 6; //center of robot to wheel in inches
+  double robotDiameter = 12; //center of robot to wheel in inches
   int outputGear = 60; //drives wheel
   int inputGear = 36; //driven by motor
   double linearDistance = (degreesTurn*3.1415*(robotDiameter/2))/180;
@@ -268,6 +335,7 @@ void turn(std::string direction, double degreesTurn, double timeTurn){
 void drive(std::string direction, double distanceDrive, double timeDrive){
 
   //function allows coder to input desired time for drive, code will automatically find speed to match it
+  distanceDrive;
   int outputGear = 60; //drives wheel
   int inputGear = 36; //driven by motor
   double rotations = distanceDrive/(3.25*3.1415);
@@ -302,11 +370,25 @@ void drive(std::string direction, double distanceDrive, double timeDrive){
 
 }
 
-
-
+void waitForTimer(){
+  bool debounce = false;
+  while(debounce == false){
+    if(Competition.isDriverControl()==true){
+      debounce = true; //debounce allows it to only run once
+      //detach thread to start the game timer
+      thread(matchTimer).detach();
+    }
+    wait(50,msec); //interval time
+  }
+}
 
 
 void autonomous(void) {
+
+  //initializing autonomous
+  leftSide.stop();
+  rightSide.stop();
+
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
@@ -351,7 +433,135 @@ void autonomous(void) {
   std::string turnLeft = "left";
   std::string turnRight = "right";
 
-//drive backwards about 1 tile
+  rightSide.setVelocity(40,percent);
+  leftSide.setVelocity(40,percent);
+
+  intakeMotor.setVelocity(100,percent);
+  hookMotor.setVelocity(100,percent);
+
+  hookMotor.setStopping(brake);
+
+  rightSide.setStopping(hold);
+  leftSide.setStopping(hold);
+
+  if(autonMode==2){ //blue side auton
+    Controller.Screen.print("2");
+    mogoPistons.set(true);
+    drive(goBackward, 26.832, 1);
+
+    wait(0.25,seconds);
+
+    mogoPistons.set(false);
+
+    //0.45 seconds at 40% is 90 degrees
+
+
+    turn(turnLeft, 45, 0.5);
+    /*
+    rightSide.spin(forward);
+    leftSide.spin(reverse);
+    wait(0.225,seconds);
+    rightSide.stop();
+    leftSide.stop();*/
+
+    intakeMotor.spin(reverse);
+    drive(goForward, 24, 2);
+    wait(1,sec);
+    intakeMotor.stop();
+    hookMotor.spin(reverse);
+    wait(1,sec);
+    hookMotor.stop();
+  }
+
+  if(autonMode==1){ //red side auton
+    Controller.Screen.print("1");
+    mogoPistons.set(true);
+    drive(goBackward, 26.832, 1);
+
+    wait(0.25,seconds);
+
+    mogoPistons.set(false);
+
+    //0.45 seconds at 40% is 90 degrees
+
+    turn(turnRight, 45, 0.5);
+    /*
+    rightSide.spin(reverse);
+    leftSide.spin(forward);
+    wait(0.225,seconds);
+    rightSide.stop();
+    leftSide.stop();*/
+
+    intakeMotor.spin(reverse);
+    drive(goForward, 24, 2);
+    wait(1,sec);
+    intakeMotor.stop();
+    hookMotor.spin(reverse);
+    wait(1,sec);
+    hookMotor.stop();
+
+
+  }
+
+  if(autonMode==3){ //score on wall stake from the left
+    Controller.Screen.print("3");
+
+    drive(goBackward, 18, 2); //move ring out of the way
+    wait(0.5,sec);
+    drive(goForward, 6, 1);
+
+    wait(1,sec);  //let robot settle
+
+    rightSide.setVelocity(40,percent);
+    leftSide.setVelocity(40,percent);
+
+    turn(turnRight, 90, 0.5);
+    /*
+    rightSide.spin(reverse);
+    leftSide.spin(forward);
+    wait(0.45,seconds);
+    rightSide.stop();
+    leftSide.stop();*/
+
+    wait(0.5,sec);
+
+    drive(goBackward, 1, 0.5);
+
+    hookMotor.spinFor(-235, degrees);
+
+  }
+
+  if(autonMode==4){ //score on wall stake from the right
+    Controller.Screen.print("4");
+
+    drive(goBackward, 18, 2);
+    wait(0.5,sec);
+    drive(goForward, 6, 1);
+
+    wait(1,sec);
+
+    rightSide.setVelocity(40,percent);
+    leftSide.setVelocity(40,percent);
+
+    turn(turnLeft, 90, 0.5);
+
+    /*
+    rightSide.spin(forward);
+    leftSide.spin(reverse);
+    wait(0.45,seconds);
+    rightSide.stop();
+    leftSide.stop();*/
+
+    wait(0.5,sec);
+
+    drive(goBackward, 1, 0.5);
+
+    hookMotor.spinFor(-235, degrees);
+
+  }
+
+
+  //drive backwards about 1 tile
 //clamp on mobile goal
 //move intake to put disc on mobile goal
 //turn left for about 35-40 degrees
@@ -362,7 +572,7 @@ void autonomous(void) {
 //turn 90 degrees left
 //drive forward for 1 tile
 
-
+  Controller.Screen.print("end of autonomous");
 }
 
 /*---------------------------------------------------------------------------*/
@@ -678,11 +888,15 @@ int main() {
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
-  // Run the pre-autonomous function.
+  // Run the autonomous selector and pre-auton
   pre_auton();
+  //ends when autonomous starts
+
+  waitForTimer(); //waits until driver control starts, and starts timer
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
+    
     wait(100, msec);
   }
 }
