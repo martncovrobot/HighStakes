@@ -290,12 +290,12 @@ void turn(std::string direction, double degreesTurn, double timeTurn){
   rightSide.setStopping(brake);
 
   if(direction=="left"){
-    inertialSensor.resetRotation(); //reset rotation
-
+    inertialSensor.resetHeading(); //reset rotation
+    //rotations will be negative degrees
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
-    while(inertialSensor.rotation() < degreesTurn){
+    while(inertialSensor.heading() > degreesTurn*(-1)){
       leftSide.spin(reverse);
       rightSide.spin(forward);
     }
@@ -304,14 +304,14 @@ void turn(std::string direction, double degreesTurn, double timeTurn){
   }
 
   else if(direction=="right"){
+    //rotations will be positive degrees
+    inertialSensor.resetHeading(); //reset rotation
 
-    inertialSensor.resetRotation(); //reset rotation
-   
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
     //int speed = (botRadius*degrees)/time
-    while(inertialSensor.rotation() < degreesTurn){
+    while(inertialSensor.heading() < degreesTurn){
       leftSide.spin(forward);
       rightSide.spin(reverse);
     }
@@ -437,9 +437,9 @@ void autonomous(void) {
   leftSide.setVelocity(40,percent);
 
   intakeMotor.setVelocity(100,percent);
-  hookMotor.setVelocity(100,percent);
+  //hookMotor.setVelocity(100,percent);
 
-  hookMotor.setStopping(brake);
+  //hookMotor.setStopping(brake);
 
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
@@ -468,9 +468,6 @@ void autonomous(void) {
     drive(goForward, 24, 2);
     wait(1,sec);
     intakeMotor.stop();
-    hookMotor.spin(reverse);
-    wait(1,sec);
-    hookMotor.stop();
   }
 
   if(autonMode==1){ //red side auton
@@ -496,10 +493,6 @@ void autonomous(void) {
     drive(goForward, 24, 2);
     wait(1,sec);
     intakeMotor.stop();
-    hookMotor.spin(reverse);
-    wait(1,sec);
-    hookMotor.stop();
-
 
   }
 
@@ -527,7 +520,7 @@ void autonomous(void) {
 
     drive(goBackward, 1, 0.5);
 
-    hookMotor.spinFor(-235, degrees);
+    intakeMotor.spinFor(-235, degrees);
 
   }
 
@@ -556,7 +549,7 @@ void autonomous(void) {
 
     drive(goBackward, 1, 0.5);
 
-    hookMotor.spinFor(-235, degrees);
+    intakeMotor.spinFor(-235, degrees);
 
   }
 
@@ -649,10 +642,10 @@ void usercontrol(void) {
   rightSide.setStopping(coast);
 
   intakeMotor.setStopping(coast);
-  hookMotor.setStopping(coast);
+  //hookMotor.setStopping(coast);
 
   intakeMotor.setVelocity(100,percent);
-  hookMotor.setVelocity(100,percent);
+  //hookMotor.setVelocity(100,percent);
 
   //Designate another thread to running the screen
 
@@ -683,7 +676,7 @@ void usercontrol(void) {
     rightSide.spin(forward);
 
 
-    //Intake Motor
+    
 
     /*
     if(Controller.ButtonR1.pressing()==true){
@@ -823,7 +816,8 @@ void usercontrol(void) {
     
     */
 
-    
+    //Intake Motor
+
     if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
       //if the right trigger is being pressed AND the right bumper is not then it intakes
       intakeMotor.spin(forward);
@@ -854,10 +848,8 @@ void usercontrol(void) {
       //if no buttons are being pressed OR both buttons are being pressed then it does nothing
     }
 
-    
 
-    //Hook Motor
-
+  /* Hook Motor
 
     if(Controller.ButtonL2.pressing()==true && Controller.ButtonL1.pressing()==false){
       //if the right trigger is being pressed AND the right bumper is not then the hook goes up
@@ -874,11 +866,13 @@ void usercontrol(void) {
       hookMotor.stop();
     }
 
+  */
+
     wait(20, msec);
 
   } //end of the loop
 
-} //end of the usercontrol(driver phase) segment
+} //end of the usercontrol(driver phase)segment
 
 //
 // Main will set up the competition functions and callbacks.
