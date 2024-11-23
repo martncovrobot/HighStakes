@@ -14,8 +14,17 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-// define your global instances of motors and other devices here
+// define your global variables/objects
 int autonMode;
+std::string goForward = "forward";
+std::string goBackward = "reverse";
+std::string turnLeft = "left";
+std::string turnRight = "right";
+
+
+/*-------------------------------------------------------------*/
+/* Assign Buttons Here                                         */
+/*-------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -428,11 +437,6 @@ void autonomous(void) {
   //      mogoPistons.set(true);                sets the solenoid to true. this will extend the pistons
   //      mogoPistons.set(false);               sets the solenoid to false. this will pull the pistons in
 
-  std::string goForward = "forward";
-  std::string goBackward = "reverse";
-  std::string turnLeft = "left";
-  std::string turnRight = "right";
-
   rightSide.setVelocity(40,percent);
   leftSide.setVelocity(40,percent);
 
@@ -635,6 +639,7 @@ void usercontrol(void) {
   int mogoExtMode;
   int mogoContMode;*/
 
+
   //Create variables and configurations (This stuff only runs once after autonomous)
   //This is where to put speed, motor configurations, etc. that you want to start with (they can be changed during the loop too)
 
@@ -642,10 +647,12 @@ void usercontrol(void) {
   rightSide.setStopping(coast);
 
   intakeMotor.setStopping(coast);
-  //hookMotor.setStopping(coast);
+  intakeTwo.setStopping(coast);
 
   intakeMotor.setVelocity(100,percent);
-  //hookMotor.setVelocity(100,percent);
+  intakeTwo.setVelocity(100,percent);
+
+  
 
   //Designate another thread to running the screen
 
@@ -674,9 +681,6 @@ void usercontrol(void) {
 
     leftSide.spin(forward); //motors always spinning, but if joystick centered then speed = 0 so it doesnt matter
     rightSide.spin(forward);
-
-
-    
 
     /*
     if(Controller.ButtonR1.pressing()==true){
@@ -821,16 +825,19 @@ void usercontrol(void) {
     if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
       //if the right trigger is being pressed AND the right bumper is not then it intakes
       intakeMotor.spin(forward);
+      intakeTwo.spin(forward);
     }
 
     else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
       //if the right bumper is being pressed AND the right trigger is not then it outtakes
       intakeMotor.spin(reverse);
+      intakeTwo.spin(reverse);
     }
 
     else{
       //if no buttons are being pressed OR both buttons are being pressed then it stops
       intakeMotor.stop();
+      intakeTwo.stop();
     }
     
 

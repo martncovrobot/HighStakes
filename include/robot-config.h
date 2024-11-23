@@ -11,7 +11,7 @@ extern motor RMM;
 extern motor RBM;
 
 extern motor intakeMotor;
-//extern motor hookMotor;
+extern motor intakeTwo;
 
 extern pneumatics mogoPistons;
 
