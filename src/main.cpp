@@ -327,6 +327,7 @@ void autonomous(void) {
         wait(0.5,sec);
         turnDegrees(-1500);//135 degrees left
         clamp.set(true);//open clamp
+        intake.stop();
         driveDegrees(-600);//push goal into corner
         driveDegrees(300);//back away from goal
       break;
