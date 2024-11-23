@@ -12,6 +12,10 @@ extern motor RBM;
 
 extern motor intakeMotor;
 extern motor hookMotor;
+extern motor_group intake;
+
 
 extern motor_group leftSide;
 extern motor_group rightSide;
+
+extern pneumatics clamp;

@@ -184,13 +184,54 @@ void setScreen(){
 
 }//end of function
 
+int autoNumber = 0; 
+bool auto_started = false;
+
+
+//Max of 3 
 
 
 void pre_auton(void) {
 
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
+  while(!auto_started){
+    Brain.Screen.clearScreen();
+
+    // Always print the current auto option
+    //Brain.Screen.printAt(5, 20, "NOAH SEITZ is awesome");
+    Brain.Screen.printAt(5, 40, "Selected Auton:");
+
+    // Update the displayed auton name based on the autoNumber value
+    switch(autoNumber){
+        case 0: 
+          Brain.Screen.printAt(5, 60, "RedRingSide/BlueGoalSide");
+          break;
+        case 1: 
+          Brain.Screen.printAt(5, 60, "RedGoalSide/BlueRingSide");
+          break;
+        case 2:
+          Brain.Screen.printAt(5, 60, "DriveForward");
+          break;
+        case 3:
+          Brain.Screen.printAt(5, 60, "Skills");
+          break;
+    }    
+
+    // Check for screen press to change auton selection
+    if(Brain.Screen.pressing()){
+        while(Brain.Screen.pressing()){
+            autoNumber++;
+            if(autoNumber == 4){
+                autoNumber = 0; // Wrap around to 0 after 3
+            }
+        }
+    }
+
+    // No need for a long wait here. Just make sure it updates constantly.
+    wait(20, msec); // This makes the loop run frequently and keeps the screen updated
+
 }
+}
+
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -202,7 +243,85 @@ void pre_auton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+
+//Revoltuion * gear ratio ( wheel diamtere * pi) = inches
+ 
+
+void driveDegrees(double number){
+  leftSide.spinFor(number,degrees,false);
+  rightSide.spinFor(number,degrees);
+}
+
+void turnDegrees(double number){
+  leftSide.spinFor(number,degrees,false);
+  rightSide.spinFor(-number,degrees);
+}
+
+
 void autonomous(void) {
+    auto_started = true;
+    switch(autoNumber){
+      case 0:
+      leftSide.setVelocity(30,percent);
+      rightSide.setVelocity(30,percent);
+      clamp.set(true);
+      driveDegrees(-1700);
+      leftSide.setVelocity(15,percent);
+      rightSide.setVelocity(15,percent);
+      wait(0.5,sec);
+      clamp.set(false);
+      intake.setVelocity(100,percent);
+      intake.spin(reverse);
+      turnDegrees(510); 
+      driveDegrees(600);
+      wait(1,seconds);
+      turnDegrees(990);
+      leftSide.setVelocity(50,percent);
+      rightSide.setVelocity(50,percent);
+      driveDegrees(1550);
+      intake.stop();
+      hookMotor.spin(forward);
+      leftSide.setVelocity(1,percent);
+      rightSide.setVelocity(1,percent);
+      driveDegrees(100);
+      break;
+
+      case 1:
+      leftSide.setVelocity(30,percent);
+      rightSide.setVelocity(30,percent);
+      clamp.set(true);
+      driveDegrees(-1700);
+      leftSide.setVelocity(15,percent);
+      rightSide.setVelocity(15,percent);
+      wait(0.5,sec);
+      clamp.set(false);
+      intake.setVelocity(100,percent);
+      intake.spin(reverse);
+      turnDegrees(-510); 
+      driveDegrees(600);
+      wait(1,seconds);
+      turnDegrees(-990);
+      leftSide.setVelocity(50,percent);
+      rightSide.setVelocity(50,percent);
+      driveDegrees(1550);
+      leftSide.setVelocity(1,percent);
+      rightSide.setVelocity(1,percent);
+      driveDegrees(100);
+
+      break;
+
+      case 2:
+
+      break; 
+
+      case 3: 
+
+      break;
+    }
+}
+
+  
+
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
@@ -221,7 +340,7 @@ void autonomous(void) {
 //drive forward for 1 tile
 
 
-}
+
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -261,6 +380,7 @@ void usercontrol(void) {
 
   intakeMotor.setVelocity(100,percent);
   hookMotor.setVelocity(100,percent);
+  intake.setVelocity(100,percent);
 
   //Designate another thread to running the screen
 
@@ -268,7 +388,28 @@ void usercontrol(void) {
   //thread(matchTimer).detach(); //On-screen timer and haptics
 
 
+  bool rightPressed = false;
+  bool clampToggle = false;
+
   while (1) {
+
+    bool buttonR2 = Controller.ButtonRight.pressing();
+
+    if(buttonR2 && !rightPressed){
+    rightPressed = true;
+    clampToggle =!clampToggle;
+    }
+      else if(!buttonR2){
+        rightPressed = false;
+      }
+
+    if(clampToggle){
+      clamp.set(true);
+    }
+    else{
+      clamp.set(false);
+    }
+
 
     //Everything inside this loop runs every 20ms during driving phase
 
@@ -293,38 +434,14 @@ void usercontrol(void) {
 
     //Intake Motor
     
-    if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
-      //if the right trigger is being pressed AND the right bumper is not then it intakes
-      intakeMotor.spin(forward);
+    if(Controller.ButtonR1.pressing()){
+      intake.spin(reverse);
     }
-
-    else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
-      //if the right bumper is being pressed AND the right trigger is not then it outtakes
-      intakeMotor.spin(reverse);
+    else if(Controller.ButtonR2.pressing()){
+      intake.spin(forward);
     }
-
     else{
-      //if no buttons are being pressed OR both buttons are being pressed then it stops
-      intakeMotor.stop();
-    }
-    
-
-    //Hook Motor
-
-
-    if(Controller.ButtonL2.pressing()==true && Controller.ButtonL1.pressing()==false){
-      //if the right trigger is being pressed AND the right bumper is not then the hook goes up
-      hookMotor.spin(forward);
-    }
-
-    else if(Controller.ButtonL1.pressing()==true && Controller.ButtonL2.pressing()==false){
-      //if the left bumper is being pressed AND the left trigger is not then the hook goes down
-      hookMotor.spin(reverse);
-    }
-
-    else{
-      //if no buttons are being pressed OR both buttons are being pressed then it stops
-      hookMotor.stop();
+      intake.stop(coast);
     }
 
     wait(20, msec);
