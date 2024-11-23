@@ -315,7 +315,20 @@ void autonomous(void) {
       break; 
 
       case 3: 
-
+        leftSide.setVelocity(50,percent);
+        rightSide.setVelocity(50,percent);
+        clamp.set(true);//open clamp
+        driveDegrees(-600);//into goal
+        wait(0.25,sec);
+        clamp.set(false);//close clamp
+        turnDegrees(-510);//turn abt 45 degrees left
+        intake.spin(reverse);
+        driveDegrees(1000);//into low ring
+        wait(0.5,sec);
+        turnDegrees(-1500);//135 degrees left
+        clamp.set(true);//open clamp
+        driveDegrees(-600);//push goal into corner
+        driveDegrees(300);//back away from goal
       break;
     }
 }
