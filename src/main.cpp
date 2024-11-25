@@ -260,6 +260,7 @@ void turnDegrees(double number){
 
 void autonomous(void) {
     auto_started = true;
+    autoNumber = 3;
     switch(autoNumber){
       case 0:
       leftSide.setVelocity(30,percent);
@@ -315,21 +316,29 @@ void autonomous(void) {
       break; 
 
       case 3: 
-        leftSide.setVelocity(50,percent);
-        rightSide.setVelocity(50,percent);
+
+        //540 turn = 90 degrees
+
+        leftSide.setStopping(brake);
+        rightSide.setStopping(brake);
+        intake.setVelocity(100,percent);
+
+
+        leftSide.setVelocity(10,percent);
+        rightSide.setVelocity(10,percent);
         clamp.set(true);//open clamp
-        driveDegrees(-600);//into goal
-        wait(0.25,sec);
-        clamp.set(false);//close clamp
-        turnDegrees(-510);//turn abt 45 degrees left
-        intake.spin(reverse);
-        driveDegrees(1000);//into low ring
+        driveDegrees(-900);//into goal
         wait(0.5,sec);
-        turnDegrees(-1500);//135 degrees left
+        clamp.set(false);//close clamp
+        turnDegrees(-250);//turn abt 45 degrees left
+        intake.spin(reverse);
+        driveDegrees(2000);//into low ring
+        wait(0.5,sec);
+        turnDegrees(-810);//135 degrees left
         clamp.set(true);//open clamp
         intake.stop();
-        driveDegrees(-600);//push goal into corner
-        driveDegrees(300);//back away from goal
+        driveDegrees(-1000);//push goal into corner
+        driveDegrees(500);//back away from goal
       break;
     }
 }
