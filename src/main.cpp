@@ -260,7 +260,6 @@ void turnDegrees(double number){
 
 void autonomous(void) {
     auto_started = true;
-    autoNumber = 3;
     switch(autoNumber){
       case 0:
       leftSide.setVelocity(30,percent);
