@@ -10,8 +10,8 @@ motor RFM = motor(PORT4, ratio6_1, false);
 motor RMM = motor(PORT5, ratio6_1, false);
 motor RBM = motor(PORT6, ratio6_1, true);
 
-motor intakeMotor = motor(PORT10, ratio18_1, false);
-motor intakeTwo = motor(PORT11, ratio6_1, false);
+motor intakeMotor = motor(PORT10, ratio18_1, true);
+motor intakeTwo = motor(PORT11, ratio6_1, true);
 
 pneumatics mogoPistons = pneumatics(Brain.ThreeWirePort.H);
 

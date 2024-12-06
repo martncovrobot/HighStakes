@@ -300,11 +300,12 @@ void turn(std::string direction, double degreesTurn, double timeTurn){
 
   if(direction=="left"){
     inertialSensor.resetHeading(); //reset rotation
+    inertialSensor.setHeading(240, degrees);
     //rotations will be negative degrees
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
-    while(inertialSensor.heading() > degreesTurn*(-1)){
+    while(inertialSensor.heading() > 240-degreesTurn){
       leftSide.spin(reverse);
       rightSide.spin(forward);
     }
@@ -315,12 +316,13 @@ void turn(std::string direction, double degreesTurn, double timeTurn){
   else if(direction=="right"){
     //rotations will be positive degrees
     inertialSensor.resetHeading(); //reset rotation
+    inertialSensor.setHeading(60, degrees);
 
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
     //int speed = (botRadius*degrees)/time
-    while(inertialSensor.heading() < degreesTurn){
+    while(inertialSensor.heading() < 60+degreesTurn){
       leftSide.spin(forward);
       rightSide.spin(reverse);
     }
@@ -448,6 +450,8 @@ void autonomous(void) {
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
 
+  autonMode = 4; //temporary for skills testing
+
   if(autonMode==2){ //blue side auton
     Controller.Screen.print("2");
     mogoPistons.set(true);
@@ -528,32 +532,159 @@ void autonomous(void) {
 
   }
 
-  if(autonMode==4){ //score on wall stake from the right
-    Controller.Screen.print("4");
+  if(autonMode==4){ //skills run
 
-    drive(goBackward, 18, 2);
+    intakeMotor.setVelocity(75,percent);
+    intakeTwo.setVelocity(100,percent);
+
+    mogoPistons.set(true);
+
+    drive(goBackward, 18, 0.75);
+    mogoPistons.set(false);
+
+    intakeMotor.spin(forward);
+    intakeTwo.spin(forward);
+
+    wait(2,sec);
+
+    intakeTwo.spin(reverse);
+
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    wait(1,sec);
+    
+
+    intakeMotor.stop();
+    intakeTwo.stop();
+
+    turn(turnLeft, 155, 1.5); //used to be 150
+    intakeMotor.spin(forward);
+    intakeTwo.spin(forward);
+    drive(goForward, 44, 1.5); //intake first ring
     wait(0.5,sec);
-    drive(goForward, 6, 1);
+
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.spin(forward);
+
+    turn(turnRight, 82, 1); //used to be 80
+    drive(goForward, 40, 1);//intake second ring
 
     wait(1,sec);
 
-    rightSide.setVelocity(40,percent);
-    leftSide.setVelocity(40,percent);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
 
-    turn(turnLeft, 90, 0.5);
+    intakeTwo.spin(forward);
 
-    /*
-    rightSide.spin(forward);
-    leftSide.spin(reverse);
-    wait(0.45,seconds);
-    rightSide.stop();
-    leftSide.stop();*/
+    turn(turnRight, 85, 1.1); //used to be 85
+  
+    drive(goForward, 40, 1.1);//intake third ring
 
     wait(0.5,sec);
 
-    drive(goBackward, 1, 0.5);
+    intakeTwo.spin(forward);
 
-    intakeMotor.spinFor(-235, degrees);
+    drive(goForward, 20, 0.9); //intake fourth ring
+    wait(2,sec);
+
+    intakeMotor.stop();
+    intakeTwo.stop();
+
+    
+
+    turn(turnRight, 100, 1); //used to be 100
+    mogoPistons.set(true);
+
+    drive(goForward, 20, 0.9);
+
+    mogoPistons.set(false);
+
+    leftSide.setVelocity(35,percent);
+    rightSide.setVelocity(35, percent);
+    
+    leftSide.spin(reverse);
+    rightSide.spin(reverse);
+
+    wait(1.25,sec);
+
+    drive(goForward, 80, 1.5);
+
+    turn(turnLeft, 185, 1.5); //used to be 180
+
+    mogoPistons.set(true);
+
+    drive(goBackward, 50, 1);
+
+    mogoPistons.set(false);
+
+    //second corner starts here
+
+    turn(turnLeft, 90, 0.9); //turn toward first ring
+
+    intakeTwo.spin(forward);
+    intakeMotor.spin(forward);
+
+    drive(goForward, 40, 0.75); //intake first ring
+    
+    wait(1,sec);
+
+    intakeTwo.spin(reverse);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.spin(forward);
+    intakeMotor.spin(forward);
+
+    turn(turnLeft,90,0.9); //turn toward to second ring
+    drive(goForward, 45, 0.75);//intake the second ring
+
+    wait(2,sec);
+
+    intakeTwo.spin(reverse);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.spin(forward);
+
+    turn(turnLeft, 90, 0.9);//turn toward third ring
+
+    drive(goForward, 30, 0.75);//intake third ring
+
+    intakeTwo.spin(reverse);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.spin(forward);
+
+    drive(goForward, 30, 0.75);//intake fourth ring
+
+    intakeTwo.spin(reverse);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.spin(forward);
+
+    drive(goBackward, 30, 0.75);
+
+    turn(turnRight, 90, 0.9);//turn to fifth ring
+
+    drive(goForward, 20, 0.75);//intake fifth ring
+
+    intakeTwo.spin(reverse);
+    turn(turnLeft, 20, 0.1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1);
+
+    intakeTwo.stop();
+
+    turn(turnRight, 100, 1.5);
+
+    drive(goForward, 30, 0.75);
+
+
+    
 
   }
 
@@ -824,14 +955,14 @@ void usercontrol(void) {
 
     if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
       //if the right trigger is being pressed AND the right bumper is not then it intakes
-      intakeMotor.spin(forward);
-      intakeTwo.spin(forward);
+      intakeMotor.spin(reverse);
+      intakeTwo.spin(reverse);
     }
 
     else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
       //if the right bumper is being pressed AND the right trigger is not then it outtakes
-      intakeMotor.spin(reverse);
-      intakeTwo.spin(reverse);
+      intakeMotor.spin(forward);
+      intakeTwo.spin(forward);
     }
 
     else{
