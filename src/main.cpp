@@ -1054,7 +1054,7 @@ void usercontrol(void) {
       //if no buttons are being pressed OR both buttons are being pressed then it does nothing
     }
 
-    if(Controller.ButtonDown.pressing()==true){//button is being pressed
+    if(Controller.ButtonRight.pressing()==true){//button is being pressed
 
       if(mogoPistons.value()==false && clampDebounce==false){
         clampDebounce=true;
@@ -1066,7 +1066,7 @@ void usercontrol(void) {
         mogoPistons.set(false); //retract
       }
     }
-    if(Controller.ButtonDown.pressing()==false){//button is not being pressed
+    if(Controller.ButtonRight.pressing()==false){//button is not being pressed
       clampDebounce=false;
     }
 
