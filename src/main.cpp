@@ -263,7 +263,7 @@ void pre_auton(void) {
       case 1: Controller.Screen.print("Left Side"); break;
       case 2: Controller.Screen.print("Right Side"); break;
       case 3: Controller.Screen.print("Wall Goal Left"); break;
-      case 4: Controller.Screen.print("Wall Goal Right"); break;
+      case 4: Controller.Screen.print("Skills"); break;
       default: Controller.Screen.print("Select Autonomous"); break;
     }
     
@@ -450,7 +450,7 @@ void autonomous(void) {
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
 
-  autonMode = 4; //temporary for skills testing
+  /*Outdated Autonomi
 
   if(autonMode==2){ //blue side auton
     Controller.Screen.print("2");
@@ -465,12 +465,12 @@ void autonomous(void) {
 
 
     turn(turnLeft, 45, 0.5);
-    /*
+    
     rightSide.spin(forward);
     leftSide.spin(reverse);
     wait(0.225,seconds);
     rightSide.stop();
-    leftSide.stop();*/
+    leftSide.stop();
 
     intakeMotor.spin(reverse);
     drive(goForward, 24, 2);
@@ -495,7 +495,7 @@ void autonomous(void) {
     leftSide.spin(forward);
     wait(0.225,seconds);
     rightSide.stop();
-    leftSide.stop();*/
+    leftSide.stop();
 
     intakeMotor.spin(reverse);
     drive(goForward, 24, 2);
@@ -522,7 +522,7 @@ void autonomous(void) {
     leftSide.spin(forward);
     wait(0.45,seconds);
     rightSide.stop();
-    leftSide.stop();*/
+    leftSide.stop();
 
     wait(0.5,sec);
 
@@ -531,6 +531,8 @@ void autonomous(void) {
     intakeMotor.spinFor(-235, degrees);
 
   }
+
+  */
 
   if(autonMode==4){ //skills run
 
@@ -687,6 +689,12 @@ void autonomous(void) {
     
 
   }
+
+
+
+  if(autonMode==2){}
+  if(autonMode==1){}
+  if(autonMode==3){}
 
 
   //drive backwards about 1 tile
@@ -1024,7 +1032,7 @@ int main() {
   pre_auton();
   //ends when autonomous starts
 
-  waitForTimer(); //waits until driver control starts, and starts timer
+  //waitForTimer(); //waits until driver control starts, and starts timer
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
