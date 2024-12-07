@@ -16,6 +16,7 @@ competition Competition;
 
 // define your global variables/objects
 int autonMode;
+bool clampDebounce;
 std::string goForward = "forward";
 std::string goBackward = "reverse";
 std::string turnLeft = "left";
@@ -39,7 +40,15 @@ std::string turnRight = "right";
 
 //this code is updated as of 9:22 am. 11/18/2024
 
+void driveDegrees(double number){
+  leftSide.spinFor(number,degrees,false);
+  rightSide.spinFor(number,degrees);
+}
 
+void turnDegrees(double number){
+  leftSide.spinFor(number,degrees,false);
+  rightSide.spinFor(-number,degrees);
+}
 
 
 void runHaptics(int hapticType){
@@ -696,14 +705,16 @@ void autonomous(void) {
     //bluegoalside/redringside
       leftSide.setVelocity(30,percent);
       rightSide.setVelocity(30,percent);
-      clamp.set(true);
+      mogoPistons.set(true);
       driveDegrees(-1700);
       leftSide.setVelocity(15,percent);
       rightSide.setVelocity(15,percent);
       wait(0.5,sec);
-      clamp.set(false);
-      intake.setVelocity(100,percent);
-      intake.spin(reverse);
+      mogoPistons.set(false);
+      intakeMotor.setVelocity(100,percent);
+      intakeTwo.setVelocity(100,percent);
+      intakeMotor.spin(forward);
+      intakeTwo.spin(forward);
       turnDegrees(510); 
       driveDegrees(600);
       wait(1,seconds);
@@ -711,8 +722,8 @@ void autonomous(void) {
       leftSide.setVelocity(50,percent);
       rightSide.setVelocity(50,percent);
       driveDegrees(1550);
-      intake.stop();
-      hookMotor.spin(forward);
+      intakeMotor.stop();
+      intakeTwo.stop();
       leftSide.setVelocity(1,percent);
       rightSide.setVelocity(1,percent);
       driveDegrees(100);
@@ -720,14 +731,16 @@ void autonomous(void) {
   if(autonMode==1){ //red goal side / blue ring side
       leftSide.setVelocity(30,percent);
       rightSide.setVelocity(30,percent);
-      clamp.set(true);
+      mogoPistons.set(true);
       driveDegrees(-1700);
       leftSide.setVelocity(15,percent);
       rightSide.setVelocity(15,percent);
       wait(0.5,sec);
-      clamp.set(false);
-      intake.setVelocity(100,percent);
-      intake.spin(reverse);
+      mogoPistons.set(false);
+      intakeMotor.setVelocity(100,percent);
+      intakeTwo.setVelocity(100,percent);
+      intakeMotor.spin(forward);
+      intakeTwo.spin(forward);
       turnDegrees(-510); 
       driveDegrees(600);
       wait(1,seconds);
@@ -1009,13 +1022,13 @@ void usercontrol(void) {
     //Intake Motor
 
     if(Controller.ButtonR2.pressing()==true && Controller.ButtonR1.pressing()==false){
-      //if the right trigger is being pressed AND the right bumper is not then it intakes
+      //if the right trigger is being pressed AND the right bumper is not then it outtakes
       intakeMotor.spin(reverse);
       intakeTwo.spin(reverse);
     }
 
     else if(Controller.ButtonR1.pressing()==true && Controller.ButtonR2.pressing()==false){
-      //if the right bumper is being pressed AND the right trigger is not then it outtakes
+      //if the right bumper is being pressed AND the right trigger is not then it intakes
       intakeMotor.spin(forward);
       intakeTwo.spin(forward);
     }
@@ -1041,6 +1054,21 @@ void usercontrol(void) {
       //if no buttons are being pressed OR both buttons are being pressed then it does nothing
     }
 
+    if(Controller.ButtonDown.pressing()==true){//button is being pressed
+
+      if(mogoPistons.value()==false && clampDebounce==false){
+        clampDebounce=true;
+        mogoPistons.set(true);
+      }
+
+      if(mogoPistons.value()==true && clampDebounce==false){  //if mogo is extended
+        clampDebounce=true;
+        mogoPistons.set(false); //retract
+      }
+    }
+    if(Controller.ButtonDown.pressing()==false){//button is not being pressed
+      clampDebounce=false;
+    }
 
   /* Hook Motor
 
