@@ -1042,18 +1042,6 @@ void usercontrol(void) {
 
     //Mobile-Goal Pneumatics
 
-    if(Controller.ButtonRight.pressing()==true && Controller.ButtonDown.pressing()==false){
-      //if the right dpad is being pressed AND the down dpad is not then it extends
-      mogoPistons.set(true);
-    }
-    else if(Controller.ButtonDown.pressing()==true && Controller.ButtonRight.pressing()==false){
-      //if the down dpad is being pressed AND the right dpad is not then it contracts
-      mogoPistons.set(false);
-    }
-    else{
-      //if no buttons are being pressed OR both buttons are being pressed then it does nothing
-    }
-
     if(Controller.ButtonRight.pressing()==true){//button is being pressed
 
       if(mogoPistons.value()==0 && clampDebounce==false){ //if mogo is retracted
