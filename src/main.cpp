@@ -1056,14 +1056,16 @@ void usercontrol(void) {
 
     if(Controller.ButtonRight.pressing()==true){//button is being pressed
 
-      if(mogoPistons.value()==false && clampDebounce==false){
+      if(mogoPistons.value()==0 && clampDebounce==false){ //if mogo is retracted
         clampDebounce=true;
         mogoPistons.set(true);
+        Controller.Screen.print(mogoPistons.value());
       }
 
-      if(mogoPistons.value()==true && clampDebounce==false){  //if mogo is extended
+      if(mogoPistons.value()==1 && clampDebounce==false){  //if mogo is extended
         clampDebounce=true;
         mogoPistons.set(false); //retract
+        Controller.Screen.print(mogoPistons.value());
       }
     }
     if(Controller.ButtonRight.pressing()==false){//button is not being pressed
