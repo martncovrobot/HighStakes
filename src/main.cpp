@@ -253,16 +253,16 @@ void pre_auton(void) {
   while(Competition.isAutonomous()==false){
     //autonomous switcher
     //this loop ends when autonomous starts
-    if(Controller.ButtonX.pressing()==true) autonMode = 1; //red side
-    else if(Controller.ButtonA.pressing()==true) autonMode = 2; // blue side
+    if(Controller.ButtonX.pressing()==true) autonMode = 1; //blue ring / red goal
+    else if(Controller.ButtonA.pressing()==true) autonMode = 2; // red ring / blue goal
     else if(Controller.ButtonUp.pressing()==true) autonMode = 3; // wall goal left
     else if(Controller.ButtonLeft.pressing()==true) autonMode = 4; //wall goal right
     Controller.Screen.clearLine();
     Controller.Screen.setCursor(1,1);
     switch(autonMode){
-      case 1: Controller.Screen.print("Left Side"); break;
-      case 2: Controller.Screen.print("Right Side"); break;
-      case 3: Controller.Screen.print("Wall Goal Left"); break;
+      case 1: Controller.Screen.print("RedGoal/BlueRing"); break;
+      case 2: Controller.Screen.print("BlueGoal/RedRing"); break;
+      case 3: Controller.Screen.print("Empty"); break;
       case 4: Controller.Screen.print("Skills"); break;
       default: Controller.Screen.print("Select Autonomous"); break;
     }
@@ -692,9 +692,56 @@ void autonomous(void) {
 
 
 
-  if(autonMode==2){}
-  if(autonMode==1){}
-  if(autonMode==3){}
+  if(autonMode==2){//blue goal side / red ring side
+    //bluegoalside/redringside
+      leftSide.setVelocity(30,percent);
+      rightSide.setVelocity(30,percent);
+      clamp.set(true);
+      driveDegrees(-1700);
+      leftSide.setVelocity(15,percent);
+      rightSide.setVelocity(15,percent);
+      wait(0.5,sec);
+      clamp.set(false);
+      intake.setVelocity(100,percent);
+      intake.spin(reverse);
+      turnDegrees(510); 
+      driveDegrees(600);
+      wait(1,seconds);
+      turnDegrees(990);
+      leftSide.setVelocity(50,percent);
+      rightSide.setVelocity(50,percent);
+      driveDegrees(1550);
+      intake.stop();
+      hookMotor.spin(forward);
+      leftSide.setVelocity(1,percent);
+      rightSide.setVelocity(1,percent);
+      driveDegrees(100);
+  }
+  if(autonMode==1){ //red goal side / blue ring side
+      leftSide.setVelocity(30,percent);
+      rightSide.setVelocity(30,percent);
+      clamp.set(true);
+      driveDegrees(-1700);
+      leftSide.setVelocity(15,percent);
+      rightSide.setVelocity(15,percent);
+      wait(0.5,sec);
+      clamp.set(false);
+      intake.setVelocity(100,percent);
+      intake.spin(reverse);
+      turnDegrees(-510); 
+      driveDegrees(600);
+      wait(1,seconds);
+      turnDegrees(-990);
+      leftSide.setVelocity(50,percent);
+      rightSide.setVelocity(50,percent);
+      driveDegrees(1550);
+      leftSide.setVelocity(1,percent);
+      rightSide.setVelocity(1,percent);
+      driveDegrees(100);
+  }
+  if(autonMode==3){
+    //nothing currently
+  }
 
 
   //drive backwards about 1 tile
