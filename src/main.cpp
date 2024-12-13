@@ -17,6 +17,7 @@ competition Competition;
 // define your global variables/objects
 int autonMode;
 bool clampDebounce;
+bool swiperDebounce;
 std::string goForward = "forward";
 std::string goBackward = "reverse";
 std::string turnLeft = "left";
@@ -264,14 +265,14 @@ void pre_auton(void) {
     //this loop ends when autonomous starts
     if(Controller.ButtonX.pressing()==true) autonMode = 1; //blue ring / red goal
     else if(Controller.ButtonA.pressing()==true) autonMode = 2; // red ring / blue goal
-    else if(Controller.ButtonUp.pressing()==true) autonMode = 3; // wall goal left
-    else if(Controller.ButtonLeft.pressing()==true) autonMode = 4; //wall goal right
+    else if(Controller.ButtonUp.pressing()==true) autonMode = 3; // drive forward
+    else if(Controller.ButtonLeft.pressing()==true) autonMode = 4; //skills
     Controller.Screen.clearLine();
     Controller.Screen.setCursor(1,1);
     switch(autonMode){
       case 1: Controller.Screen.print("RedGoal/BlueRing"); break;
       case 2: Controller.Screen.print("BlueGoal/RedRing"); break;
-      case 3: Controller.Screen.print("Empty"); break;
+      case 3: Controller.Screen.print("Drive Forward"); break;
       case 4: Controller.Screen.print("Skills"); break;
       default: Controller.Screen.print("Select Autonomous"); break;
     }
@@ -396,6 +397,7 @@ void waitForTimer(){
     if(Competition.isDriverControl()==true){
       debounce = true; //debounce allows it to only run once
       //detach thread to start the game timer
+      Controller.Screen.clearScreen();
       thread(matchTimer).detach();
     }
     wait(50,msec); //interval time
@@ -753,7 +755,8 @@ void autonomous(void) {
       driveDegrees(100);
   }
   if(autonMode==3){
-    //nothing currently
+    //drive forward to get off the starting line
+    drive(goForward, 30, 1.5);
   }
 
 
@@ -1047,18 +1050,33 @@ void usercontrol(void) {
       if(mogoPistons.value()==0 && clampDebounce==false){ //if mogo is retracted
         clampDebounce=true;
         mogoPistons.set(true);
-        Controller.Screen.print(mogoPistons.value());
       }
 
       if(mogoPistons.value()==1 && clampDebounce==false){  //if mogo is extended
         clampDebounce=true;
         mogoPistons.set(false); //retract
-        Controller.Screen.print(mogoPistons.value());
       }
     }
     if(Controller.ButtonRight.pressing()==false){//button is not being pressed
       clampDebounce=false;
     }
+
+    if(Controller.ButtonY.pressing()==true){//button is being pressed
+
+      if(swiperPiston.value()==0 && swiperDebounce==false){ //if mogo is retracted
+        swiperDebounce=true;
+        swiperPiston.set(true);
+      }
+
+      if(swiperPiston.value()==1 && swiperDebounce==false){  //if mogo is extended
+        swiperDebounce=true;
+        swiperPiston.set(false); //retract
+      }
+    }
+    if(Controller.ButtonY.pressing()==false){//button is not being pressed
+      swiperDebounce=false;
+    }
+
 
   /* Hook Motor
 

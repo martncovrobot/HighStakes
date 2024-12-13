@@ -14,6 +14,7 @@ extern motor intakeMotor;
 extern motor intakeTwo;
 
 extern pneumatics mogoPistons;
+extern pneumatics swiperPiston;
 
 extern inertial inertialSensor;
 
