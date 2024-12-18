@@ -16,7 +16,7 @@ motor intakeTwo = motor(PORT11, ratio6_1, true);
 pneumatics mogoPistons = pneumatics(Brain.ThreeWirePort.H);
 pneumatics swiperPiston = pneumatics(Brain.ThreeWirePort.F);
 
-inertial inertialSensor = inertial(PORT20);
+inertial inertialSensor = inertial(PORT18);
 
 motor_group leftSide = motor_group(LFM,LMM,LBM);
 motor_group rightSide = motor_group(RFM, RMM, RBM);

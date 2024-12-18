@@ -1,3 +1,8 @@
+
+#ifndef ROBOT_CONFIG_H
+#define ROBOT_CONFIG_H
+
+
 #include "vex.h";
 using namespace vex;
 
@@ -20,3 +25,8 @@ extern inertial inertialSensor;
 
 extern motor_group leftSide;
 extern motor_group rightSide;
+
+
+
+
+#endif
