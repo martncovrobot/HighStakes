@@ -5,8 +5,8 @@
 #include "vex.h";
 using namespace vex;
 
-void turn(std::string direction, double degreesTurn, double timeTurn);
-void drive(std::string direction, double distanceDrive, double timeDrive);
+void turn(std::string direction, double degreesTurn, double timeTurn, double relativeCoefficient);
+void drive(std::string direction, double distanceDrive, double timeDrive, double relativeCoefficient);
 
 void driveDegrees(double number);
 void turnDegrees(double number);

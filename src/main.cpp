@@ -40,12 +40,11 @@ std::string turnRight = "right";
 /*---------------------------------------------------------------------------*/
 
 
-//this code is updated as of 9:22 am. 11/18/2024
+//this code is updated as of 1:05 pm, 1/9/2025
 
 
 
 void pre_auton(void) {
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
   calibrateInertial();
@@ -136,7 +135,6 @@ void autonomous(void) {
 
   intakeMotor.setVelocity(100,percent);
   
-
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
 
@@ -231,7 +229,7 @@ void autonomous(void) {
 
     mogoPistons.set(true);
 
-    drive(goBackward, 18, 0.75);
+    drive(goBackward, 18, 0.75, 1);
     mogoPistons.set(false);
 
     intakeMotor.spin(forward);
@@ -241,8 +239,8 @@ void autonomous(void) {
 
     intakeTwo.spin(reverse);
 
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     wait(1,sec);
     
@@ -250,36 +248,36 @@ void autonomous(void) {
     intakeMotor.stop();
     intakeTwo.stop();
 
-    turn(turnLeft, 155, 1.5); //used to be 150
+    turn(turnLeft, 155, 1.5, 1); //used to be 150
     intakeMotor.spin(forward);
     intakeTwo.spin(forward);
-    drive(goForward, 44, 1.5); //intake first ring
+    drive(goForward, 44, 1.5, 1); //intake first ring
     wait(0.5,sec);
 
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    turn(turnRight, 82, 1); //used to be 80
-    drive(goForward, 40, 1);//intake second ring
+    turn(turnRight, 82, 1, 1); //used to be 80
+    drive(goForward, 40, 1, 1);//intake second ring
 
     wait(1,sec);
 
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    turn(turnRight, 85, 1.1); //used to be 85
+    turn(turnRight, 85, 1.1, 1); //used to be 85
   
-    drive(goForward, 40, 1.1);//intake third ring
+    drive(goForward, 40, 1.1, 1);//intake third ring
 
     wait(0.5,sec);
 
     intakeTwo.spin(forward);
 
-    drive(goForward, 20, 0.9); //intake fourth ring
+    drive(goForward, 20, 0.9, 1); //intake fourth ring
     wait(2,sec);
 
     intakeMotor.stop();
@@ -287,10 +285,10 @@ void autonomous(void) {
 
     
 
-    turn(turnRight, 100, 1); //used to be 100
+    turn(turnRight, 100, 1, 1); //used to be 100
     mogoPistons.set(true);
 
-    drive(goForward, 20, 0.9);
+    drive(goForward, 20, 0.9, 1);
 
     mogoPistons.set(false);
 
@@ -302,85 +300,79 @@ void autonomous(void) {
 
     wait(1.25,sec);
 
-    drive(goForward, 80, 1.5);
+    drive(goForward, 80, 1.5, 1);
 
-    turn(turnLeft, 185, 1.5); //used to be 180
+    turn(turnLeft, 185, 1.5, 1); //used to be 180
 
     mogoPistons.set(true);
 
-    drive(goBackward, 50, 1);
+    drive(goBackward, 50, 1, 1);
 
     mogoPistons.set(false);
 
     //second corner starts here
 
-    turn(turnLeft, 90, 0.9); //turn toward first ring
+    turn(turnLeft, 90, 0.9, 1); //turn toward first ring
 
     intakeTwo.spin(forward);
     intakeMotor.spin(forward);
 
-    drive(goForward, 40, 0.75); //intake first ring
+    drive(goForward, 40, 0.75, 1); //intake first ring
     
     wait(1,sec);
 
     intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
     intakeMotor.spin(forward);
 
-    turn(turnLeft,90,0.9); //turn toward to second ring
-    drive(goForward, 45, 0.75);//intake the second ring
+    turn(turnLeft, 90, 0.9, 1); //turn toward to second ring
+    drive(goForward, 45, 0.75, 1);//intake the second ring
 
     wait(2,sec);
 
     intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    turn(turnLeft, 90, 0.9);//turn toward third ring
+    turn(turnLeft, 90, 0.9, 1);//turn toward third ring
 
-    drive(goForward, 30, 0.75);//intake third ring
+    drive(goForward, 30, 0.75, 1);//intake third ring
 
     intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    drive(goForward, 30, 0.75);//intake fourth ring
+    drive(goForward, 30, 0.75, 1);//intake fourth ring
 
     intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    drive(goBackward, 30, 0.75);
+    drive(goBackward, 30, 0.75, 1);
 
-    turn(turnRight, 90, 0.9);//turn to fifth ring
+    turn(turnRight, 90, 0.9, 1);//turn to fifth ring
 
-    drive(goForward, 20, 0.75);//intake fifth ring
+    drive(goForward, 20, 0.75, 1);//intake fifth ring
 
     intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1);
+    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.stop();
 
-    turn(turnRight, 100, 1.5);
+    turn(turnRight, 100, 1.5, 1);
 
-    drive(goForward, 30, 0.75);
-
-
-    
-
+    drive(goForward, 30, 0.75, 1);
   }
-
-
 
   if(autonMode==2){//blue goal side / red ring side
     //bluegoalside/redringside
@@ -396,61 +388,47 @@ void autonomous(void) {
       intakeTwo.setVelocity(100,percent);
       intakeMotor.spin(forward);
       intakeTwo.spin(forward);
-      turnDegrees(510); 
-      driveDegrees(600);
+      turnDegrees(510);  //need to change to new function
+      driveDegrees(600);  //need to change to new function
       wait(1,seconds);
-      turnDegrees(990);
+      turnDegrees(990); //need to change to new function
       leftSide.setVelocity(50,percent);
       rightSide.setVelocity(50,percent);
-      driveDegrees(1550);
+      driveDegrees(1550); //need to change to new function
       intakeMotor.stop();
       intakeTwo.stop();
       leftSide.setVelocity(1,percent);
       rightSide.setVelocity(1,percent);
-      driveDegrees(100);
+      driveDegrees(100);  //need to change to new function
   }
   if(autonMode==1){ //red goal side / blue ring side
       leftSide.setVelocity(30,percent);
       rightSide.setVelocity(30,percent);
       mogoPistons.set(true);
-      driveDegrees(-1700);
+      driveDegrees(-1700);  //need to change to new function
       leftSide.setVelocity(15,percent);
       rightSide.setVelocity(15,percent);
       wait(0.5,sec);
       mogoPistons.set(false);
       intakeMotor.setVelocity(100,percent);
       intakeTwo.setVelocity(100,percent);
-      intakeMotor.spin(forward);
+      intakeMotor.spin(forward); 
       intakeTwo.spin(forward);
-      turnDegrees(-510); 
-      driveDegrees(600);
+      turnDegrees(-510); //need to change to new function
+      driveDegrees(600);  //need to change to new function
       wait(1,seconds);
-      turnDegrees(-990);
+      turnDegrees(-990);  //need to change to new function
       leftSide.setVelocity(50,percent);
       rightSide.setVelocity(50,percent);
-      driveDegrees(1550);
+      driveDegrees(1550); //need to change to new function
       leftSide.setVelocity(1,percent);
       rightSide.setVelocity(1,percent);
-      driveDegrees(100);
+      driveDegrees(100);  //need to change to new function
   }
   if(autonMode==3){
     //drive forward to get off the starting line
-    drive(goForward, 30, 1.5);
+    drive(goForward, 30, 1.5, 1);  //need to change to new function
   }
-
-  
-  
-
-  //drive backwards about 1 tile
-//clamp on mobile goal
-//move intake to put disc on mobile goal
-//turn left for about 35-40 degrees
-//drive forward about 1.5 tiles
-//run intake
-//turn 45 degrees to the left
-//release mobile goal
-//turn 90 degrees left
-//drive forward for 1 tile
 
   Controller.Screen.print("end of autonomous");
 }
@@ -535,27 +513,11 @@ void usercontrol(void) {
   intakeMotor.setVelocity(100,percent);
   intakeTwo.setVelocity(100,percent);
 
-  
-
-  //Designate another thread to running the screen
-
-  //thread(setScreen).detach(); //Screen Display (Temps and battery)
-  //thread(matchTimer).detach(); //On-screen timer and haptics
-
-
-  while (1) {
+  while (1) { //driver loop; catches thread and listens for controller input
 
     //Everything inside this loop runs every 20ms during driving phase
 
     //Robot Info
-
-    /* Controller Screen Concept
-    
-    BTRY:87                      Temps  45*     50*
-    RSVR:80                             55*     45*
-                                        50*     40*
-    
-    */
 
     //DriveTrain Motors
     
@@ -724,7 +686,7 @@ void usercontrol(void) {
     }
     
 
-    //Mobile-Goal Pneumatics
+    //Pneumatics
 
     if(Controller.ButtonRight.pressing()==true){//button is being pressed
 
@@ -757,26 +719,6 @@ void usercontrol(void) {
     if(Controller.ButtonY.pressing()==false){//button is not being pressed
       swiperDebounce=false;
     }
-
-
-  /* Hook Motor
-
-    if(Controller.ButtonL2.pressing()==true && Controller.ButtonL1.pressing()==false){
-      //if the right trigger is being pressed AND the right bumper is not then the hook goes up
-      hookMotor.spin(forward);
-    }
-
-    else if(Controller.ButtonL1.pressing()==true && Controller.ButtonL2.pressing()==false){
-      //if the left bumper is being pressed AND the left trigger is not then the hook goes down
-      hookMotor.spin(reverse);
-    }
-
-    else{
-      //if no buttons are being pressed OR both buttons are being pressed then it stops
-      hookMotor.stop();
-    }
-
-  */
 
     wait(20, msec);
 

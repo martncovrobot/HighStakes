@@ -9,13 +9,17 @@ using namespace vex;
 
 /*  AUTONOMOUS LOCOMOTION  */
 
-void turn(std::string direction, double degreesTurn, double timeTurn)
+void turn(std::string direction, double degreesTurn, double timeTurn, double relativeCoefficient)
 {
+
+  //relativeCoefficient is passed in, determines the acceleration speed coefficient (RPMS per degree)
+  //standard coefficient is the global turn speed. doubling the number will double all turn speed (but not double acceleration)
+  double standardCoefficient = 1;
 
   double robotDiameter = 12; // center of robot to wheel in inches
   double outputGear = 60;       // drives wheel
   double inputGear = 36;        // driven by motor
-  double linearDistance = (degreesTurn * 3.1415 * (robotDiameter / 2)) / 180;
+  double linearDistance = (degreesTurn * 3.1415 * (robotDiameter/2)) / 180;
   double rotations = linearDistance / (3.25 * 3.1415);
   double motorRotations = rotations * (outputGear / inputGear);
   double speedRPM = (motorRotations / timeTurn) * 60;
@@ -27,12 +31,16 @@ void turn(std::string direction, double degreesTurn, double timeTurn)
   {
     inertialSensor.resetHeading(); // reset rotation
     inertialSensor.setHeading(240, degrees);
-    // rotations will be negative degrees
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
     while (inertialSensor.heading() > 240 - degreesTurn)
     {
+      double degreesLeft = 240 - inertialSensor.heading();
+      double speedChange = relativeCoefficient*degreesLeft;
+
+      leftSide.setVelocity(standardCoefficient*speedRPM+speedChange,rpm);
+      rightSide.setVelocity(standardCoefficient*speedRPM+speedChange,rpm);
       leftSide.spin(reverse);
       rightSide.spin(forward);
     }
@@ -42,16 +50,19 @@ void turn(std::string direction, double degreesTurn, double timeTurn)
 
   else if (direction == "right")
   {
-    // rotations will be positive degrees
     inertialSensor.resetHeading(); // reset rotation
     inertialSensor.setHeading(60, degrees);
-
     leftSide.setVelocity(speedRPM, rpm);
     rightSide.setVelocity(speedRPM, rpm);
 
-    // int speed = (botRadius*degrees)/time
     while (inertialSensor.heading() < 60 + degreesTurn)
     {
+      double degreesLeft = 60 + degreesTurn - inertialSensor.heading();
+      double speedChange = relativeCoefficient*degreesLeft;
+
+      leftSide.setVelocity(standardCoefficient*speedRPM+speedChange,rpm);
+      rightSide.setVelocity(standardCoefficient*speedRPM+speedChange,rpm);
+
       leftSide.spin(forward);
       rightSide.spin(reverse);
     }
@@ -66,8 +77,11 @@ void turn(std::string direction, double degreesTurn, double timeTurn)
   }
 }
 
-void drive(std::string direction, double distanceDrive, double timeDrive)
+void drive(std::string direction, double distanceDrive, double timeDrive, double relativeCoefficient)
 {
+  //relative coefficient is how fast it accelerates and decelerates as it approaches the target
+  double standardCoefficient = 5; //acceleration to return back to track (RPMs per degree of stray)
+
 
   // function allows coder to input desired time for drive, code will automatically find speed to match it
   double outputGear = 60; // drives wheel
@@ -79,29 +93,102 @@ void drive(std::string direction, double distanceDrive, double timeDrive)
   if (direction == "forward")
   {
 
-    leftSide.setStopping(brake);
+    leftSide.setStopping(brake);  //set braking types
     rightSide.setStopping(brake);
 
-    leftSide.setVelocity(speedRPM, rpm);
+    leftSide.setVelocity(speedRPM, rpm);  //set initial velocities
     rightSide.setVelocity(speedRPM, rpm);
 
-    leftSide.spinFor(forward, motorRotations * 360, degrees, speedRPM, rpm, false);
-    rightSide.spinFor(forward, motorRotations * 360, degrees, speedRPM, rpm, true);
-  }
+    inertialSensor.setHeading(180,degrees); //reset heading for rotation tracking
+
+    rightSide.setPosition(0,degrees); //reset motor positions for distance tracking
+    leftSide.setPosition(0,degrees);
+
+    //loop will catch thread, and monitor inertial sensor. it will calculate the perpendicular stray from the desired path, and autocorrect
+    while(leftSide.position(degrees) < motorRotations*360 || rightSide.position(degrees) < motorRotations*360){
+      if(leftSide.position(degrees) >= motorRotations*360){leftSide.stop();}
+      else{leftSide.spin(forward);}
+      if(rightSide.position(degrees) >= motorRotations*360){rightSide.stop();}
+      else{rightSide.spin(forward);}
+
+      //calculate the position on the path and determine speed boost
+      double distanceRotations = motorRotations - ( (leftSide.position(degrees) /360) + (rightSide.position(degrees)/360) )/2;
+      double extraSpeedRPM = distanceRotations*relativeCoefficient;
+
+      //if robot has turned to the right
+      if(inertialSensor.heading() > 240){
+        double degreeStray = inertialSensor.heading() - 240;  //calculates the number of degrees that the direction has strayed from the desired path
+        double returnSpeedRPM = standardCoefficient*degreeStray; //an additional (variable) rpm for each degree that the robot has strayed
+        rightSide.setVelocity(speedRPM+returnSpeedRPM+extraSpeedRPM,rpm); //add the speed to the side
+      }
+      //if robot has turned to the left
+      else if(inertialSensor.heading() < 240){
+        double degreeStray = 240 - inertialSensor.heading();  //calculates the number of degrees that the direction has strayed from the desired path
+        double returnSpeedRPM = standardCoefficient*degreeStray; //an additional (variable) rpm for each degree that the robot has strayed
+        leftSide.setVelocity(speedRPM+returnSpeedRPM+extraSpeedRPM,rpm);  //add the speed to the side
+      }
+      else{//robot is perfectly on path
+        leftSide.setVelocity(speedRPM+extraSpeedRPM,rpm); //reset the speed so it doesn't go off path again
+        rightSide.setVelocity(speedRPM+extraSpeedRPM,rpm);
+      }
+      wait(20,msec);//loop delay to prevent overload
+    }
+    
+    leftSide.stop();  //stops motors after drive has completed
+    rightSide.stop();
+
+  }//end of "if direction == forward"
 
   if (direction == "reverse")
   {
-
-    leftSide.setStopping(brake);
+    leftSide.setStopping(brake);  //set braking types
     rightSide.setStopping(brake);
 
-    leftSide.setVelocity(speedRPM, rpm);
+    leftSide.setVelocity(speedRPM, rpm);  //set initial velocities
     rightSide.setVelocity(speedRPM, rpm);
 
-    leftSide.spinFor(reverse, motorRotations * 360, degrees, speedRPM, rpm, false);
-    rightSide.spinFor(reverse, motorRotations * 360, degrees, speedRPM, rpm, true);
-  }
-}
+    inertialSensor.setHeading(180,degrees); //reset heading for rotation tracking
+
+    rightSide.setPosition(0,degrees); //reset motor positions for distance tracking
+    leftSide.setPosition(0,degrees);
+
+    //loop will catch thread, and monitor inertial sensor. it will calculate the perpendicular stray from the desired path, and autocorrect
+    while( abs(leftSide.position(degrees)) < motorRotations*360 || abs(rightSide.position(degrees)) < motorRotations*360){
+      if(abs(leftSide.position(degrees)) >= motorRotations*360){leftSide.stop();}
+      else{leftSide.spin(reverse);}
+
+      if(abs(rightSide.position(degrees)) >= motorRotations*360){rightSide.stop();}
+      else{rightSide.spin(reverse);}
+
+      //calculate the position on the path and determine speed boost
+      double distanceRotations = motorRotations - ((leftSide.position(degrees)/360) + (rightSide.position(degrees)/360))/2;
+      double extraSpeedRPM = distanceRotations*relativeCoefficient;
+
+      //if robot has turned to the right (relative to the face of robot)
+      if(inertialSensor.heading() > 240){
+        double degreeStray = inertialSensor.heading() - 240;  //calculates the number of degrees that the direction has strayed from the desired path
+        double returnSpeedRPM = standardCoefficient*degreeStray; //an additional (variable) rpm for each degree that the robot has strayed
+        leftSide.setVelocity(speedRPM+returnSpeedRPM+extraSpeedRPM,rpm); //add the speed to the side
+      }
+      //if robot has turned to the left (relative to the face of the robot)
+      else if(inertialSensor.heading() < 240){
+        double degreeStray = 240 - inertialSensor.heading();  //calculates the number of degrees that the direction has strayed from the desired path
+        double returnSpeedRPM = standardCoefficient*degreeStray; //an additional (variable) rpm for each degree that the robot has strayed
+        rightSide.setVelocity(speedRPM+returnSpeedRPM+extraSpeedRPM,rpm);  //add the speed to the side
+      }
+      else{//robot is perfectly on path
+        leftSide.setVelocity(speedRPM+extraSpeedRPM,rpm); //reset the speed so it doesn't go off path again
+        rightSide.setVelocity(speedRPM+extraSpeedRPM,rpm);
+      }
+      wait(20,msec);//loop delay to prevent overload
+    }
+    
+    leftSide.stop();  //stops motors after drive has completed
+    rightSide.stop();
+
+  }//end of "if direction == reverse"
+
+}//end of drive function
 
 /* BASIC LOCOMOTION */
 
