@@ -47,6 +47,7 @@ std::string turnRight = "right";
 void pre_auton(void) {
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  
   calibrateInertial();
 
   while(Competition.isAutonomous()==false){
@@ -229,7 +230,7 @@ void autonomous(void) {
 
     mogoPistons.set(true);
 
-    drive(goBackward, 18, 0.75, 1);
+    drive(goBackward, 18, 1, 1);
     mogoPistons.set(false);
 
     intakeMotor.spin(forward);
@@ -239,8 +240,8 @@ void autonomous(void) {
 
     intakeTwo.spin(reverse);
 
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
+    //turn(turnLeft, 20, 1, 3);  //jiggle the ring in
+    //turn(turnRight, 20, 1, 1);
 
     wait(1,sec);
     
@@ -248,30 +249,30 @@ void autonomous(void) {
     intakeMotor.stop();
     intakeTwo.stop();
 
-    turn(turnLeft, 155, 1.5, 1); //used to be 150
+    turn(turnLeft, 155, 4, 2); //used to be 150
     intakeMotor.spin(forward);
     intakeTwo.spin(forward);
-    drive(goForward, 44, 1.5, 1); //intake first ring
+    drive(goForward, 30, 3, 2); //intake first ring
     wait(0.5,sec);
 
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
+    //turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    //turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    turn(turnRight, 82, 1, 1); //used to be 80
-    drive(goForward, 40, 1, 1);//intake second ring
+    turn(turnRight, 82, 3, 2); //used to be 80
+    drive(goForward, 40, 3, 2);//intake second ring
 
     wait(1,sec);
 
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
+    //turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
+    //turn(turnRight, 20, 0.1, 1);
 
     intakeTwo.spin(forward);
 
-    turn(turnRight, 85, 1.1, 1); //used to be 85
+    turn(turnRight, 85, 2, 1); //used to be 85
   
-    drive(goForward, 40, 1.1, 1);//intake third ring
+    drive(goForward, 40, 1.5, 1);//intake third ring
 
     wait(0.5,sec);
 
@@ -379,7 +380,7 @@ void autonomous(void) {
       leftSide.setVelocity(30,percent);
       rightSide.setVelocity(30,percent);
       mogoPistons.set(true);
-      driveDegrees(-1700);
+      driveDegrees(-1700);  //1700 motor revolutions
       leftSide.setVelocity(15,percent);
       rightSide.setVelocity(15,percent);
       wait(0.5,sec);
@@ -388,18 +389,18 @@ void autonomous(void) {
       intakeTwo.setVelocity(100,percent);
       intakeMotor.spin(forward);
       intakeTwo.spin(forward);
-      turnDegrees(510);  //need to change to new function
-      driveDegrees(600);  //need to change to new function
+      turnDegrees(450);  //need to change to new function
+      driveDegrees(700);  //need to change to new function
       wait(1,seconds);
       turnDegrees(990); //need to change to new function
       leftSide.setVelocity(50,percent);
       rightSide.setVelocity(50,percent);
-      driveDegrees(1550); //need to change to new function
+      driveDegrees(1600); //need to change to new function
       intakeMotor.stop();
       intakeTwo.stop();
-      leftSide.setVelocity(1,percent);
-      rightSide.setVelocity(1,percent);
-      driveDegrees(100);  //need to change to new function
+      leftSide.setVelocity(5,percent);
+      rightSide.setVelocity(5,percent);
+      driveDegrees(300);  //need to change to new function
   }
   if(autonMode==1){ //red goal side / blue ring side
       leftSide.setVelocity(30,percent);
@@ -414,20 +415,20 @@ void autonomous(void) {
       intakeTwo.setVelocity(100,percent);
       intakeMotor.spin(forward); 
       intakeTwo.spin(forward);
-      turnDegrees(-510); //need to change to new function
-      driveDegrees(600);  //need to change to new function
+      turnDegrees(-450); //need to change to new function
+      driveDegrees(700);  //need to change to new function
       wait(1,seconds);
       turnDegrees(-990);  //need to change to new function
       leftSide.setVelocity(50,percent);
       rightSide.setVelocity(50,percent);
-      driveDegrees(1550); //need to change to new function
-      leftSide.setVelocity(1,percent);
-      rightSide.setVelocity(1,percent);
-      driveDegrees(100);  //need to change to new function
+      driveDegrees(1600); //need to change to new function
+      leftSide.setVelocity(5,percent);
+      rightSide.setVelocity(5,percent);
+      driveDegrees(300);  //need to change to new function
   }
   if(autonMode==3){
     //drive forward to get off the starting line
-    drive(goForward, 30, 1.5, 1);  //need to change to new function
+    drive(goForward, 100, 15, 50);  //need to change to new function
   }
 
   Controller.Screen.print("end of autonomous");
@@ -737,6 +738,8 @@ int main() {
   // Run the autonomous selector and pre-auton
   pre_auton();
   //ends when autonomous starts
+
+  
 
   //waitForTimer(&Competition); //waits until driver control starts, and starts timer
 
