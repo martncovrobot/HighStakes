@@ -134,95 +134,11 @@ void autonomous(void) {
   rightSide.setVelocity(40,percent);
   leftSide.setVelocity(40,percent);
 
-  intakeMotor.setVelocity(100,percent);
-  
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
 
-  /*Outdated Autonomi
-
-  if(autonMode==2){ //blue side auton
-    Controller.Screen.print("2");
-    mogoPistons.set(true);
-    drive(goBackward, 26.832, 1);
-
-    wait(0.25,seconds);
-
-    mogoPistons.set(false);
-
-    //0.45 seconds at 40% is 90 degrees
 
 
-    turn(turnLeft, 45, 0.5);
-    
-    rightSide.spin(forward);
-    leftSide.spin(reverse);
-    wait(0.225,seconds);
-    rightSide.stop();
-    leftSide.stop();
-
-    intakeMotor.spin(reverse);
-    drive(goForward, 24, 2);
-    wait(1,sec);
-    intakeMotor.stop();
-  }
-
-  if(autonMode==1){ //red side auton
-    Controller.Screen.print("1");
-    mogoPistons.set(true);
-    drive(goBackward, 26.832, 1);
-
-    wait(0.25,seconds);
-
-    mogoPistons.set(false);
-
-    //0.45 seconds at 40% is 90 degrees
-
-    turn(turnRight, 45, 0.5);
-    /*
-    rightSide.spin(reverse);
-    leftSide.spin(forward);
-    wait(0.225,seconds);
-    rightSide.stop();
-    leftSide.stop();
-
-    intakeMotor.spin(reverse);
-    drive(goForward, 24, 2);
-    wait(1,sec);
-    intakeMotor.stop();
-
-  }
-
-  if(autonMode==3){ //score on wall stake from the left
-    Controller.Screen.print("3");
-
-    drive(goBackward, 18, 2); //move ring out of the way
-    wait(0.5,sec);
-    drive(goForward, 6, 1);
-
-    wait(1,sec);  //let robot settle
-
-    rightSide.setVelocity(40,percent);
-    leftSide.setVelocity(40,percent);
-
-    turn(turnRight, 90, 0.5);
-    /*
-    rightSide.spin(reverse);
-    leftSide.spin(forward);
-    wait(0.45,seconds);
-    rightSide.stop();
-    leftSide.stop();
-
-    wait(0.5,sec);
-
-    drive(goBackward, 1, 0.5);
-
-    intakeMotor.spinFor(-235, degrees);
-
-  }
-
-  */
-  
   if(autonMode==4){ //skills run
 
     intakeMotor.setVelocity(75,percent);
