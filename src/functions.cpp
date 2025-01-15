@@ -146,9 +146,6 @@ void drive(std::string direction, double distanceDrive, double timeDrive, double
       if(rightSide.position(degrees) <= motorRotations*(-360) ){rightSide.stop();}
       else{rightSide.spin(forward);}
 
-      Controller.Screen.clearScreen();
-      Controller.Screen.setCursor(2,2);
-      Controller.Screen.print(motorRotations);
       //calculate the position on the path and determine speed boost
       double distanceRotations = (-1)*motorRotations - ( (leftSide.position(degrees)/360) + (rightSide.position(degrees)/360) )/2;
       distanceRotations *= -1;  //change distance(rotations) to positive

@@ -359,8 +359,6 @@ void autonomous(void) {
     //drive forward to get off the starting line
     drive(goForward, 100, 15, 50, 1);  //need to change to new function
   }
-
-  Controller.Screen.print("end of autonomous");
 }
 
 /*---------------------------------------------------------------------------*/
