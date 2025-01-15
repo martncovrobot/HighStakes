@@ -95,14 +95,14 @@ void autonomous(void) {
   leftSide.stop();
   rightSide.stop();
 
-  drive(goForward, 100, 100, 150, 0.01);
+  /*  EXAMPLES
+  drive(goForward, 100, 100, 150, 0.01);  //fast
   wait(3,sec);
-  drive(goForward, 20, 30, 50, 0.01);
+  drive(goForward, 20, 30, 50, 0.01);   //medium
   wait(3,sec);
-  drive(goBackward, 70, 90, 50, 0.01);
+  drive(goBackward, 70, 90, 50, 0.01);//medium
 
-  wait(50,sec);
-
+  */
 
   // ..........................................................................
   // Insert autonomous user code here.
