@@ -8,6 +8,7 @@ using namespace vex;
 
 extern brain Brain;
 extern controller Controller;
+extern controller sideController;
 extern motor LFM;
 extern motor LMM;
 extern motor LBM;
