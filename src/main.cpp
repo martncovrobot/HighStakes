@@ -96,6 +96,15 @@ void autonomous(void) {
   rightSide.stop();
 
   /*  EXAMPLES
+
+  generally do about 1 inch per second for the base speed, 0.01 for standard coefficient (unless it starts going off course, then increase)
+  do the acceleration based on how fast you want it to go (50-150)
+
+  format is like this "drive(direction, inches, seconds, acceleration, returnToCourse)"
+
+  format for turn "turn(direction, degrees, seconds, acceleration)"
+    i havent tested what the best acceleration is, so you will have to experiment with the numbers
+
   drive(goForward, 100, 100, 150, 0.01);  //fast
   wait(3,sec);
   drive(goForward, 20, 30, 50, 0.01);   //medium
