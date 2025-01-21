@@ -162,155 +162,39 @@ void autonomous(void) {
 
 
   if(autonMode==4){ //skills run
+    rightSide.setVelocity(20,percent);
+    leftSide.setVelocity(20,percent);
 
     intakeMotor.setVelocity(75,percent);
     intakeTwo.setVelocity(100,percent);
 
     mogoPistons.set(true);
-
-    drive(goBackward, 18, 1, 1, 1);
-    mogoPistons.set(false);
-
-    intakeMotor.spin(forward);
-    intakeTwo.spin(forward);
-
-    wait(2,sec);
-
-    intakeTwo.spin(reverse);
-
-    //turn(turnLeft, 20, 1, 3);  //jiggle the ring in
-    //turn(turnRight, 20, 1, 1);
-
-    wait(1,sec);
-    
-
-    intakeMotor.stop();
-    intakeTwo.stop();
-
-    turn(turnLeft, 155, 4, 2); //used to be 150
-    intakeMotor.spin(forward);
-    intakeTwo.spin(forward);
-    drive(goForward, 30, 3, 2, 1); //intake first ring
-    wait(0.5,sec);
-
-    //turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    //turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.spin(forward);
-
-    turn(turnRight, 82, 3, 2); //used to be 80
-    drive(goForward, 40, 3, 2, 1);//intake second ring
-
-    wait(1,sec);
-
-    //turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    //turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.spin(forward);
-
-    turn(turnRight, 85, 2, 1); //used to be 85
-  
-    drive(goForward, 40, 1.5, 1, 1);//intake third ring
-
-    wait(0.5,sec);
-
-    intakeTwo.spin(forward);
-
-    drive(goForward, 20, 0.9, 1, 1); //intake fourth ring
-    wait(2,sec);
-
-    intakeMotor.stop();
-    intakeTwo.stop();
-
-    
-
-    turn(turnRight, 100, 1, 1); //used to be 100
-    mogoPistons.set(true);
-
-    drive(goForward, 20, 0.9, 1, 1);
+    wait(0.35, seconds);
+    driveDegrees(-940);
 
     mogoPistons.set(false);
-
-    leftSide.setVelocity(35,percent);
-    rightSide.setVelocity(35, percent);
     
-    leftSide.spin(reverse);
-    rightSide.spin(reverse);
-
-    wait(1.25,sec);
-
-    drive(goForward, 80, 1.5, 1, 1);
-
-    turn(turnLeft, 185, 1.5, 1); //used to be 180
-
-    mogoPistons.set(true);
-
-    drive(goBackward, 50, 1, 1, 1);
-
-    mogoPistons.set(false);
-
-    //second corner starts here
-
-    turn(turnLeft, 90, 0.9, 1); //turn toward first ring
-
-    intakeTwo.spin(forward);
     intakeMotor.spin(forward);
+    intakeTwo.spin(forward);
 
-    drive(goForward, 40, 0.75, 1, 1); //intake first ring
+    rightSide.setVelocity(30,percent);
+    leftSide.setVelocity(30,percent);
+
+    turnDegrees(-950);
     
-    wait(1,sec);
+    driveDegrees(1300);
+    wait(0.5, seconds);
 
-    intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
+    turnDegrees(570);
+    driveDegrees(1300);
+    wait(0.5, seconds);
 
-    intakeTwo.spin(forward);
-    intakeMotor.spin(forward);
+    turnDegrees(530);
+    driveDegrees(1900);
+    wait(0.5, seconds);
 
-    turn(turnLeft, 90, 0.9, 1); //turn toward to second ring
-    drive(goForward, 45, 0.75, 1, 1);//intake the second ring
-
-    wait(2,sec);
-
-    intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.spin(forward);
-
-    turn(turnLeft, 90, 0.9, 1);//turn toward third ring
-
-    drive(goForward, 30, 0.75, 1, 1);//intake third ring
-
-    intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.spin(forward);
-
-    drive(goForward, 30, 0.75, 1, 1);//intake fourth ring
-
-    intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.spin(forward);
-
-    drive(goBackward, 30, 0.75, 1, 1);
-
-    turn(turnRight, 90, 0.9, 1);//turn to fifth ring
-
-    drive(goForward, 20, 0.75, 1, 1);//intake fifth ring
-
-    intakeTwo.spin(reverse);
-    turn(turnLeft, 20, 0.1, 1);  //jiggle the ring in
-    turn(turnRight, 20, 0.1, 1);
-
-    intakeTwo.stop();
-
-    turn(turnRight, 100, 1.5, 1);
-
-    drive(goForward, 30, 0.75, 1, 1);
+    turnDegrees(1100);
+    driveDegrees(-400);
   }
 
   if(autonMode==2){//blue goal side / red ring side
