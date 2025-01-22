@@ -172,23 +172,35 @@ void autonomous(void) {
       intakeTwo.spin(reverse);
       wait(1,sec);
       intakeTwo.stop();
-      drive(goForward, 10, 5, 200, 0.03);
+
+      drive(goForward, 10, 3, 200, 0.03);
+
+      turnDegrees(-580); //90 degrees
+
+      mogoPistons.set(true);
+      drive(goBackward, 24, 10, 150, 0.03);
+      mogoPistons.set(false);
 
       turnDegrees(580); //90 degrees
 
-      mogoPistons.set(true);
-      drive(goBackward, 20, 20, 150, 0.03);
-      mogoPistons.set(false);
-
-      turnInertial(turnRight, 90, 25);
-
       intakeMotor.spin(forward);
       intakeTwo.spin(forward);
-      drive(goForward, 20, 20, 200, 0.03);
+      drive(goForward, 25, 10, 200, 0.03);
 
-      turnInertial(turnRight, 90, 25);
+      turnDegrees(580); //90 degrees
       
-      drive(goForward, 20, 20, 200, 0.01);
+      drive(goForward, 25, 10, 200, 0.03);
+
+      turnDegrees(580); //90 degrees
+
+      driveDegrees(2500);
+      driveDegrees(-100);
+
+      turnDegrees(700);
+      drive(goBackward, 15, 8, 150, 0.03);
+      mogoPistons.set(true);
+
+
 
     
   }

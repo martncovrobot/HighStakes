@@ -228,6 +228,8 @@ void driveDegrees(double number)
 
 void turnDegrees(double number)
 {
+  rightSide.setVelocity(30,percent);
+  leftSide.setVelocity(30,percent);
   leftSide.spinFor(number, degrees, false);
   rightSide.spinFor(-number, degrees);
 }
