@@ -165,7 +165,7 @@ void autonomous(void) {
   if(autonMode==4){ //skills run
 
       //autonomous functions seem to work. drive works well at certain numbers, and turnInertial is accurate at low speeds
-      
+      //ggg
       intakeTwo.setVelocity(100,percent);
       intakeTwo.spin(reverse);
       wait(1,sec);
