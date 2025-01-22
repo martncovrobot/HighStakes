@@ -7,6 +7,7 @@ using namespace vex;
 
 void turn(std::string direction, double degreesTurn, double timeTurn, double relativeCoefficient);
 void drive(std::string direction, double distanceDrive, double timeDrive, double relativeCoefficient, double standardCoefficient);
+void turnInertial(std::string direction, double degreesTurn, double velocity);
 
 void driveDegrees(double number);
 void turnDegrees(double number);

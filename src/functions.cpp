@@ -183,6 +183,38 @@ void drive(std::string direction, double distanceDrive, double timeDrive, double
   rightSide.stop();
 }//end of drive function
 
+void turnInertial(std::string direction, double degreesTurn, double velocity){
+  int turnDir = (direction == "left") ? 1 : 2;
+
+  switch(turnDir){
+    case 1:
+      inertialSensor.setHeading(240,degrees);
+
+      leftSide.setVelocity(-1*velocity, percent);
+      rightSide.setVelocity(velocity, percent);
+
+      while(inertialSensor.heading() > 240-degreesTurn){
+        leftSide.spin(forward);
+        rightSide.spin(forward);
+      }
+
+    break;
+    case 2:
+      inertialSensor.setHeading(120,degrees);
+
+      leftSide.setVelocity(velocity, percent);
+      rightSide.setVelocity(-1*velocity, percent);
+
+      while(inertialSensor.heading() < 120+degreesTurn){
+        leftSide.spin(forward);
+        rightSide.spin(forward);
+      }
+    break;
+  }
+
+
+}
+
 /* BASIC LOCOMOTION */
 
 void driveDegrees(double number)
