@@ -162,6 +162,8 @@ void autonomous(void) {
 
   autonMode = 4;
 
+  calibrateInertial();
+
   if(autonMode==4){ //skills run
 
       //autonomous functions seem to work. drive works well at certain numbers, and turnInertial is accurate at low speeds
@@ -172,7 +174,7 @@ void autonomous(void) {
       intakeTwo.stop();
       drive(goForward, 10, 5, 200, 0.03);
 
-      turnInertial(turnLeft, 90, 25);
+      turnDegrees(580); //90 degrees
 
       mogoPistons.set(true);
       drive(goBackward, 20, 20, 150, 0.03);

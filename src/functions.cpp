@@ -185,17 +185,19 @@ void drive(std::string direction, double distanceDrive, double timeDrive, double
 
 void turnInertial(std::string direction, double degreesTurn, double velocity){
   int turnDir = (direction == "left") ? 1 : 2;
+  inertialSensor.resetHeading();
 
   switch(turnDir){
     case 1:
       inertialSensor.setHeading(240,degrees);
 
-      leftSide.setVelocity(-1*velocity, percent);
-      rightSide.setVelocity(velocity, percent);
+      leftSide.spin(forward);
+      rightSide.spin(forward);
 
       while(inertialSensor.heading() > 240-degreesTurn){
-        leftSide.spin(forward);
-        rightSide.spin(forward);
+        leftSide.setVelocity(-1* (velocity + (inertialSensor.heading() > 240-degreesTurn) * 5), percent);
+        rightSide.setVelocity(velocity + (inertialSensor.heading() > 240-degreesTurn) * 5, percent);
+        
       }
 
     break;
@@ -211,7 +213,8 @@ void turnInertial(std::string direction, double degreesTurn, double velocity){
       }
     break;
   }
-
+  leftSide.stop();
+  rightSide.stop();
 
 }
 
