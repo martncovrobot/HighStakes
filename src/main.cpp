@@ -197,8 +197,10 @@ void autonomous(void) {
       driveDegrees(-100);
 
       turnDegrees(700);
-      drive(goBackward, 15, 8, 150, 0.03);
+      driveDegrees(-500);
       mogoPistons.set(true);
+      driveDegrees(500);
+      
 
 
 
