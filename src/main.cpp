@@ -193,13 +193,41 @@ void autonomous(void) {
 
       turnDegrees(580); //90 degrees
 
-      driveDegrees(2500);
+      leftSide.setVelocity(15,percent);
+      rightSide.setVelocity(15,percent);
+
+
+      leftSide.spin(forward);
+      rightSide.spin(forward);
+      wait(8,sec);
       driveDegrees(-100);
 
       turnDegrees(700);
       driveDegrees(-500);
       mogoPistons.set(true);
+      intakeMotor.stop();
+      intakeTwo.stop();
       driveDegrees(500);
+
+      wait(0.5,sec);
+
+      turnDegrees(500);
+      wait(0.5,sec);
+      driveDegrees(250);
+      wait(0.5,sec);
+
+      turnDegrees(590);
+
+      drive(goBackward, 75, 90, 200, 0.025);
+
+      mogoPistons.set(false);
+
+      turnDegrees(-580);
+
+      intakeMotor.spin(forward);
+      intakeTwo.spin(forward);
+
+      drive(goForward, 30, 30, 200, 0.03);
       
 
 
@@ -587,11 +615,11 @@ int main() {
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
+  
+
   // Run the autonomous selector and pre-auton
   pre_auton();
   //ends when autonomous starts
-
-  
 
   //waitForTimer(&Competition); //waits until driver control starts, and starts timer
 
