@@ -160,10 +160,6 @@ void autonomous(void) {
   rightSide.setStopping(hold);
   leftSide.setStopping(hold);
 
-  autonMode = 4;
-
-  calibrateInertial();
-
   if(autonMode==4){ //skills run
 
       //autonomous functions seem to work. drive works well at certain numbers, and turnInertial is accurate at low speeds
